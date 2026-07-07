@@ -2,25 +2,37 @@
 
 **嵌入式系統 · Agentic Engineering · 受治理的自主軟體維護**
 
-我正在建立一套以嵌入式裝置為核心的工程系統：從 UART、長期 log 分析與事件診斷，到 Persona-governed SDD／TDD、可重現建置、DUT 確定性驗證，以及跨專案 policy-as-code 治理。
+我正在建立一套以嵌入式裝置為核心的工程系統，從 UART 通訊、長期 log 分析與事件診斷，一路延伸到 Persona-governed SDD／TDD、可重現建置、DUT 確定性驗證，以及跨專案的 policy-as-code 治理。
 
-> 目標不是讓 AI 自己宣稱「修好了」，而是讓診斷、變更、建置、測試與治理各自留下可稽核證據，再由 deterministic gate 決定是否通過。
+> 目標不是讓 AI 自己宣稱「修好了」，而是讓診斷、變更、建置、測試與治理都留下可稽核證據，再交由 deterministic gate 決定是否放行。
 
 ## 系統層級與關係
 
 ```mermaid
 flowchart TD
     HW["DUT / STA / UART"]
-    SW["serialwrap<br/>硬體通訊與 UART 基礎設施"]
 
-    LS["LogSensing<br/>長期 log 情報"]
-    IDK["IntelliDbgKit<br/>單次事件重現、診斷、證據與共識"]
-
-    SDD["paulshaclaw Persona SDD / TDD Pipeline<br/>規格 → 角色分工 → Scope Gate → RED / GREEN → Review"]
-    BUILD["Auto Build Contract<br/>setup → steps → artifacts → verify"]
-    TP["TestPilot<br/>嵌入式裝置測試、證據蒐集與 deterministic verdict"]
-    GOV["paulsha-conventions<br/>跨 repo policy、文件一致性、安全、CI 與 merge gate"]
-    CTRL["paulshaclaw Manager / Memory / Audit<br/>編排、記憶、重試、回滾、升級與操作介面"]
+    subgraph P1["① 硬體通訊"]
+        SW["serialwrap"]
+    end
+    subgraph P2["② 知識與診斷"]
+        direction LR
+        LS["LogSensing<br/>長期 log 情報"]
+        IDK["IntelliDbgKit<br/>單次事件診斷"]
+    end
+    subgraph P3["③ 受治理變更"]
+        SDD["paulshaclaw<br/>Persona SDD／TDD"]
+    end
+    subgraph P4["④ 建置與驗證"]
+        direction LR
+        BUILD["Auto Build"]
+        TP["TestPilot<br/>deterministic verdict"]
+    end
+    subgraph P5["⑤ 治理與控制"]
+        direction LR
+        GOV["paulsha-conventions<br/>policy gate"]
+        CTRL["paulshaclaw Manager<br/>memory / audit"]
+    end
 
     HW --> SW
     SW --> LS
@@ -30,7 +42,11 @@ flowchart TD
     SDD --> BUILD
     BUILD --> TP
     TP --> GOV
-    GOV --> CTRL
+    CTRL -.->|編排／回填／回滾| SW
+
+    style GOV fill:#3a3a52,stroke:#c9a26a,stroke-width:2px,color:#ece6da
+    style CTRL fill:#33333f,stroke:#9a9ab0,stroke-width:1.5px,color:#ece6da
+    style SW fill:#2f3b30,stroke:#7faa7f,stroke-width:1.5px,color:#ece6da
 ```
 
 ## 核心專案
@@ -92,18 +108,19 @@ AI 可以提供 diagnosis、advisory 與 remediation，但不能自己決定最�
 個別元件大多已有可運行實作；目前主要工作是完成跨 repo 的端到端維護閉環：
 
 ```mermaid
-flowchart TD
-    A["log / test failure"]
-    B["diagnosis artifact"]
-    C["governed specification"]
-    D["TDD implementation"]
-    E["reproducible build"]
-    F["DUT deterministic verification"]
-    G["policy gate"]
-    H["promote / retry / rollback / escalate"]
-    I["結果回填長期記憶與 LogSensing"]
+flowchart LR
+    A["log / test failure"] --> B["diagnosis artifact"]
+    B --> C["governed spec<br/>+ TDD impl"]
+    C --> D["reproducible build<br/>+ DUT verification"]
+    D --> G{"policy gate"}
+    G -->|pass| P["promote<br/>+ 回填長期記憶"]
+    G -->|fail| R["retry / rollback<br/>/ escalate"]
+    R --> C
+    P -.->|經驗回饋，下一輪更省| A
 
-    A --> B --> C --> D --> E --> F --> G --> H --> I
+    style G fill:#3a3a52,stroke:#c9a26a,stroke-width:2px,color:#ece6da
+    style P fill:#2f3b30,stroke:#7faa7f,stroke-width:1.5px,color:#ece6da
+    style R fill:#463030,stroke:#c98a8a,stroke-width:1.5px,color:#ece6da
 ```
 
 目前端到端整合成熟度：約 **55–58%**。
