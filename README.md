@@ -40,15 +40,6 @@ flowchart TD
         GH[".github<br/>Account-wide Health Defaults"]
     end
 
-    subgraph P5["⑤ Agent 技能、診斷與擴展工具 (Skills & Tools)"]
-        direction LR
-        PM["skill-problemmap<br/>Session Failure Diagnostic"]
-        SH["session-health<br/>Session Health Analyzer"]
-        WSL["wsl2agent-auto-install<br/>WSL Agent Auto Setup"]
-        ASK["ask-bridge<br/>CLI Chrome LLM Bridge"]
-        OCR["ocr-from2xlsx<br/>OCR Form Converter"]
-    end
-
     HW --> SW
     SW --> LOGGEN
     SW --> CLAW
@@ -59,9 +50,6 @@ flowchart TD
     TP --> GOV
     MUD -.-> CORTEX
     TPL -.-> GOV
-    PM -.-> CLAW
-    SH -.-> CLAW
-    WSL -.-> CLAW
 
     style GOV fill:#3a3a52,stroke:#c9a26a,stroke-width:2px,color:#ece6da
     style CLAW fill:#2f3b30,stroke:#7faa7f,stroke-width:2px,color:#ece6da
