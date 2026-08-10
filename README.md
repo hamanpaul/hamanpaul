@@ -87,22 +87,6 @@ flowchart TD
 | [`new-project-template`](https://github.com/hamanpaul/new-project-template) | 符合 `paulsha-conventions` 的專案骨架 | 提供 GitHub Template、最小 bootstrap、policy metadata 與 CI 檢查工作流 | 範本骨架 |
 | [`.github`](https://github.com/hamanpaul/.github) | 帳號級社群健康度與預設檔案 | 為 `hamanpaul/*` 儲存庫提供統一社群規範與 GitHub Health Defaults | 帳號基座 |
 
-### 4. Agent 技能與 CLI 環境維護 (Skills, CLI Diagnostics & Setup)
-
-| Repo | 主要責任 | 類別 / 說明 |
-|---|---|---|
-| [`skill-problemmap`](https://github.com/hamanpaul/skill-problemmap) | Session 異常診斷 Agent Skill | 讓 Agent CLI 能對自身 Session 失敗與 `turn_aborted` 進行復盤與診斷 |
-| [`session-health`](https://github.com/hamanpaul/session-health) | Agent CLI Session 健康度分析工具 | 診斷 Agent 執行軌跡、Token 耗用與上下文異常 |
-| [`wsl2agent-auto-install`](https://github.com/hamanpaul/wsl2agent-auto-install) | WSL2 AI Agent CLI 自動化安裝腳本 | 快速開箱與建置 AI Agent (Codex & Copilot) 於 WSL2 環境 |
-| [`skill-confluence-limited-wr`](https://github.com/hamanpaul/skill-confluence-limited-wr) | Confluence 受限寫入 Agent Skill | 基於 Atlassian-skills 延伸之受控 Confluence 文件更新技能 |
-
-### 5. 開源工具與側翼專案 (Open Source Utilities & Applications)
-
-| Repo | 主要責任 | 語言 / 技術 |
-|---|---|---|
-| [`ask-bridge`](https://github.com/hamanpaul/ask-bridge) | 終端機網頁 Chrome LLM Bridge | Rust 實作，在 CLI 透過真實 Chrome 瀏覽器調用 ChatGPT / Gemini 答題 |
-| [`ocr-from2xlsx`](https://github.com/hamanpaul/ocr-from2xlsx) | 手寫表格 OCR 轉換工具 | Python 實作之客製化 OCR 手寫表格轉 Excel 工具 |
-
 ---
 
 ## 關鍵技術柱石 (Key Technical Pillars)
