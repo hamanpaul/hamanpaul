@@ -67,8 +67,8 @@ flowchart TD
 | Repo | 主要責任 | 技術亮點 / 特色 | 狀態 Snapshot |
 |---|---|---|---:|
 | [`paulshaclaw`](https://github.com/hamanpaul/paulshaclaw) | 個人 Agent OS 的 **Operator Shell** (破蝦哥 🦞) | 保留 Shell/Integration/Operator 介面；派工與記憶已解耦至外部平面 | Operator Core |
-| [`paulsha-hippo`](https://github.com/hamanpaul/paulsha-hippo) | 跨 LLM Vendor 記憶與經驗固化基座 (🦛 Hippo) | Session 自動蒸餾成原子筆記、睡眠期（Dream）整理、隔天喚醒（Wakeup） Context 回灌 | v0.1.0 已發布 |
-| [`paulsha-cortex`](https://github.com/hamanpaul/paulsha-cortex) | Harness 治理平面三件套 (🧠 Cortex) | Persona 護欄契約 + Coordinator 派工 + `.paulsha/control.json` 檔案控制面 | 治理核心 |
+| [`paulsha-hippo`](https://github.com/hamanpaul/paulsha-hippo) | 跨 LLM Vendor 記憶與經驗固化基座 (🦛 Hippo) | Session 自動蒸餾成原子筆記、睡眠期（Dream）整理、隔天喚醒（Wakeup） Context 回灌 | 已上線 |
+| [`paulsha-cortex`](https://github.com/hamanpaul/paulsha-cortex) | Harness 治理平面三件套 (🧠 Cortex) | Persona 護欄契約 + Coordinator 派工 + 檔案化 Control 控制面 | 治理核心 |
 | [`paulsha-patchmud`](https://github.com/hamanpaul/paulsha-patchmud) | 純文字回合制 Coding-Agent 評測框架 (⚔️ MUD) | 零 LLM 裁判！以 Issue 為關卡、Patch 為動作，透過確定性測試進行位元級重播評分 | 評測實驗室 |
 
 ### 2. 硬體通訊與驗證基座 (Hardware Transport & Verification)
@@ -83,7 +83,7 @@ flowchart TD
 
 | Repo | 主要責任 | 技術亮點 / 特色 | 狀態 Snapshot |
 |---|---|---|---:|
-| [`paulsha-conventions`](https://github.com/hamanpaul/paulsha-conventions) | 跨 Repo Policy 守門員與規範驗證器 | 定義 `auto_build` 重現契約、版本/Changelog 規範、PR Gate 與 Workflow 鎖定 | Policy v1.0.x |
+| [`paulsha-conventions`](https://github.com/hamanpaul/paulsha-conventions) | 跨 Repo Policy 守門員與規範驗證器 | 定義 `auto_build` 重現契約、版本/Changelog 規範、PR Gate 與 Workflow 鎖定 | Policy Gate 運行中 |
 | [`new-project-template`](https://github.com/hamanpaul/new-project-template) | 符合 `paulsha-conventions` 的專案骨架 | 提供 GitHub Template、最小 bootstrap、policy metadata 與 CI 檢查工作流 | 範本骨架 |
 | [`.github`](https://github.com/hamanpaul/.github) | 帳號級社群健康度與預設檔案 | 為 `hamanpaul/*` 儲存庫提供統一社群規範與 GitHub Health Defaults | 帳號基座 |
 
@@ -102,9 +102,6 @@ flowchart TD
 |---|---|---|
 | [`ask-bridge`](https://github.com/hamanpaul/ask-bridge) | 終端機網頁 Chrome LLM Bridge | Rust 實作，在 CLI 透過真實 Chrome 瀏覽器調用 ChatGPT / Gemini 答題 |
 | [`ocr-from2xlsx`](https://github.com/hamanpaul/ocr-from2xlsx) | 手寫表格 OCR 轉換工具 | Python 實作之客製化 OCR 手寫表格轉 Excel 工具 |
-| [`mini-auto`](https://github.com/hamanpaul/mini-auto) | 自動化模組與控制工具 | C++ 實作之輕量自動化專案 |
-| [`openclaw-obsidian-deploy`](https://github.com/hamanpaul/openclaw-obsidian-deploy) | Obsidian 筆記維護容器部署 | Shell 實作之 Dockerfile 部署環境 |
-| [`custom-claw-tools`](https://github.com/hamanpaul/custom-claw-tools) | Agent 工具擴充組 | Python 實作之環境工具集 |
 
 ---
 
@@ -117,11 +114,11 @@ flowchart TD
 將 Agent 系統徹底解耦為四大專精平面：
 - **Operator Shell (`paulshaclaw` 🦞)**：負責互動介面、任務編排與工具調用。
 - **Memory Base (`paulsha-hippo` 🦛)**：受海馬迴啟發，自動將對話蒸餾為原子筆記（Distillation），於背景離線期進行結構整理（Dream），並於次日任務發起時主動喚醒回灌（Wakeup Context）。
-- **Governance Plane (`paulsha-cortex` 🧠)**：提供硬性 Guardrail，透過 Persona 邊界契約與 `.paulsha/control.json` 控制面約束 Agent 的變更行為。
-- **Benchmark Engine (`paulsha-patchmud` ⚔️)**：以純文字 MUD 評測模式，透過 Bit-exact 重播與實機測試，對 Agent 的經濟性、火力與控場力進行零 LLM 裁判的公正量測。
+- **Governance Plane (`paulsha-cortex` 🧠)**：提供硬性 Guardrail，透過 Persona 邊界契約與檔案化控制面約束 Agent 的變更行為。
+- **Benchmark Engine (`paulsha-patchmud` ⚔️)**：以純文字 MUD 評測模式，透過 Bit-exact 重播與確定性測試，對 Agent 的經濟性、火力與控場力進行零 LLM 裁判的公正量測。
 
 ### 3. Deterministic Build & Verification
-- **`auto_build` (`paulsha-conventions`)**：經由 `.paul-project.yml` 宣告 per-project 的可重現建置與測試步驟。
+- **`auto_build` (`paulsha-conventions`)**：以宣告式契約定義 per-project 的可重現建置與測試步驟。
 - **`testpilot-core`**：提供確定性 Verdict 核心。AI Agent 可提出診斷報告與 Patch 建議，但是否判定 Pass / Fail 完全由 TestPilot Runtime 獨立執行與審計。
 
 ---
