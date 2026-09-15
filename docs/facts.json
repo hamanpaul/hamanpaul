@@ -1,0 +1,580 @@
+{
+  "schema_version": 1,
+  "document_type": "architecture-facts",
+  "repository": {
+    "url": "https://github.com/hamanpaul/hamanpaul",
+    "revision": "62fe5bc33f2c9e0c75ed58aa049bb6c632c8b644"
+  },
+  "scope": {
+    "name": "公開工程生態的責任與代表性接點；非單一部署拓撲",
+    "includes": [
+      "公開來源支持的 repo 權威分工",
+      "代表性的工具、記憶、PR、UART 交接",
+      "條件式組合與隔離評測"
+    ],
+    "excludes": [
+      "私有原始碼與本機設定",
+      "所有依賴與所有內部控制元件的完整展開",
+      "Cortex 內部 Run/Phase/Card/Job/AgentInstance 流程細圖",
+      "已部署狀態或本次未執行的 runtime E2E"
+    ]
+  },
+  "components": [
+    {
+      "id": "agents",
+      "label": "Coding Agents",
+      "type": "external",
+      "sublabel": "執行器類別；不是同一個程序",
+      "responsibility": "外部 coding-agent 執行器類別；Cortex 依角色契約派工，PatchMUD 使用隔離、工具寫入停用的 CLI 呼叫。圖中同一類別不代表共享程序或憑證。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/cortex.txt",
+          "line": 1,
+          "end_line": 21,
+          "excerpt_sha256": "f44ca5b9f6815cb1a3fcc3c53512b0dde7a6afeab0473c9d6182905a6989a8b4",
+          "claim": "外部 coding-agent 執行器類別；Cortex 依角色契約派工，PatchMUD 使用隔離、工具寫入停用的 CLI 呼叫。圖中同一類別不代表共享程序或憑證。"
+        },
+        {
+          "path": "docs/evidence/patchmud-cli.txt",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "963159fc7d9de9ad814690ac4d03140238fa3ae122ce22e9b6e3977a2a5ed05c",
+          "claim": "外部 coding-agent 執行器類別；Cortex 依角色契約派工，PatchMUD 使用隔離、工具寫入停用的 CLI 呼叫。圖中同一類別不代表共享程序或憑證。"
+        }
+      ]
+    },
+    {
+      "id": "cortex",
+      "label": "paulsha-cortex",
+      "type": "backend",
+      "sublabel": "工作生命週期與派工權威",
+      "responsibility": "持有 work / WorkflowRun / Job / Slice 生命週期；Manager 協調派工、重試、review、delivery、completion；Persona 是契約，Monitor 是投影。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/cortex-completion.txt",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "285e5f64f74d436c065148a4f7712fc82c10862fa3ff6b6980d12edc78a5472e",
+          "claim": "持有 work / WorkflowRun / Job / Slice 生命週期；Manager 協調派工、重試、review、delivery、completion；Persona 是契約，Monitor 是投影。"
+        },
+        {
+          "path": "docs/evidence/cortex.txt",
+          "line": 1,
+          "end_line": 21,
+          "excerpt_sha256": "f44ca5b9f6815cb1a3fcc3c53512b0dde7a6afeab0473c9d6182905a6989a8b4",
+          "claim": "持有 work / WorkflowRun / Job / Slice 生命週期；Manager 協調派工、重試、review、delivery、completion；Persona 是契約，Monitor 是投影。"
+        }
+      ]
+    },
+    {
+      "id": "github",
+      "label": "GitHub",
+      "type": "external",
+      "sublabel": "Issue、PR 與遠端變更證據",
+      "responsibility": "持有遠端 PR、候選 commit 與 CI 證據；Cortex 交付接點重新讀取遠端事實並以 exact candidate gate 控制合併。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/cortex-github.txt",
+          "line": 1,
+          "end_line": 43,
+          "excerpt_sha256": "472f0d44dc770ca14b5779570702a7c96059c29980490693610baa2725ff7944",
+          "claim": "持有遠端 PR、候選 commit 與 CI 證據；Cortex 交付接點重新讀取遠端事實並以 exact candidate gate 控制合併。"
+        },
+        {
+          "path": "docs/evidence/policy-ci.txt",
+          "line": 1,
+          "end_line": 14,
+          "excerpt_sha256": "e2e4a242df7132db00594494a8984c75d400a8b7674fa291a9c55ead36ef086d",
+          "claim": "持有遠端 PR、候選 commit 與 CI 證據；Cortex 交付接點重新讀取遠端事實並以 exact candidate gate 控制合併。"
+        }
+      ]
+    },
+    {
+      "id": "hardware",
+      "label": "DUT / STA",
+      "type": "external",
+      "sublabel": "實體裝置與原始輸出",
+      "responsibility": "DUT / STA 是 UART 原始輸出與實體狀態的來源；本圖不證明任何特定設備已連接。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/serialwrap.txt",
+          "line": 1,
+          "end_line": 19,
+          "excerpt_sha256": "141c03521865264de125502c7859d9dd52c59bdc78c433e2e3e804939e697d2c",
+          "claim": "DUT / STA 是 UART 原始輸出與實體狀態的來源；本圖不證明任何特定設備已連接。"
+        }
+      ]
+    },
+    {
+      "id": "hippo",
+      "label": "paulsha-hippo",
+      "type": "backend",
+      "sublabel": "結果連結的長期經驗",
+      "responsibility": "持有 outcome-linked 工程經驗、provenance、recall、applied attribution、reinforce、contradict、retire；不擁有工作進度或 vendor 憑證。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/hippo-pipeline.txt",
+          "line": 1,
+          "end_line": 8,
+          "excerpt_sha256": "696ae4fa5254bf53701189fd3282e0ca19ebb372d3936b473119866c628275af",
+          "claim": "持有 outcome-linked 工程經驗、provenance、recall、applied attribution、reinforce、contradict、retire；不擁有工作進度或 vendor 憑證。"
+        },
+        {
+          "path": "docs/evidence/hippo.txt",
+          "line": 1,
+          "end_line": 5,
+          "excerpt_sha256": "6dfeddd6eccccda44177a438a983f8cedf396fec1c03561f3b30210f4563b3e3",
+          "claim": "持有 outcome-linked 工程經驗、provenance、recall、applied attribution、reinforce、contradict、retire；不擁有工作進度或 vendor 憑證。"
+        }
+      ]
+    },
+    {
+      "id": "log-generator",
+      "label": "log-generator",
+      "type": "backend",
+      "sublabel": "實機 reboot / soak 測試",
+      "responsibility": "透過 serialwrap 執行長時間實機 reboot-log soak；每個 controller 對應一個 COM selector，故障注入需額外安裝。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/soak.txt",
+          "line": 1,
+          "end_line": 6,
+          "excerpt_sha256": "43659fcb3708ef68d1ea58f48c15c18f7911332fe00d6acfef78fb3b1fe94b93",
+          "claim": "透過 serialwrap 執行長時間實機 reboot-log soak；每個 controller 對應一個 COM selector，故障注入需額外安裝。"
+        }
+      ]
+    },
+    {
+      "id": "patchmud",
+      "label": "paulsha-patchmud",
+      "type": "backend",
+      "sublabel": "隔離評測，不是正式維護",
+      "responsibility": "隔離 coding-agent 評測、確定性評分與重播；對 Cortex/Hippo 無 runtime 依賴，量測輸出可作下游檔案輸入但不是正式工作派工服務。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/patchmud-cli.txt",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "963159fc7d9de9ad814690ac4d03140238fa3ae122ce22e9b6e3977a2a5ed05c",
+          "claim": "隔離 coding-agent 評測、確定性評分與重播；對 Cortex/Hippo 無 runtime 依賴，量測輸出可作下游檔案輸入但不是正式工作派工服務。"
+        },
+        {
+          "path": "docs/evidence/patchmud.txt",
+          "line": 1,
+          "end_line": 10,
+          "excerpt_sha256": "462626f9c8fd450d7576fcb91e34e798936e286b25439983579e9b0f7d0868c9",
+          "claim": "隔離 coding-agent 評測、確定性評分與重播；對 Cortex/Hippo 無 runtime 依賴，量測輸出可作下游檔案輸入但不是正式工作派工服務。"
+        }
+      ]
+    },
+    {
+      "id": "plugins",
+      "label": "Domain Plugins",
+      "type": "backend",
+      "sublabel": "領域步驟、解析與 evaluate()",
+      "responsibility": "專案自定 cases、environment operations 與 evaluate() 領域判定；可使用硬體 transport，也可完全不使用 UART。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/testpilot-scope.txt",
+          "line": 1,
+          "end_line": 17,
+          "excerpt_sha256": "5e17c809e4dc3dac33a96d9dcb11a9fc1bdab9436137eb1a6f8c297ea7357595",
+          "claim": "專案自定 cases、environment operations 與 evaluate() 領域判定；可使用硬體 transport，也可完全不使用 UART。"
+        },
+        {
+          "path": "docs/evidence/testpilot-verdict.txt",
+          "line": 1,
+          "end_line": 6,
+          "excerpt_sha256": "1c9955c9fdc838534e9a51e1f8a241d6b0559a5447ef2293948fa3a13f27d9fd",
+          "claim": "專案自定 cases、environment operations 與 evaluate() 領域判定；可使用硬體 transport，也可完全不使用 UART。"
+        },
+        {
+          "path": "docs/evidence/testpilot.txt",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "94c39ba9d2adb62000ac9ed73b49baa9bbfa8f1d26579b72238df0dc2a43828d",
+          "claim": "專案自定 cases、environment operations 與 evaluate() 領域判定；可使用硬體 transport，也可完全不使用 UART。"
+        }
+      ]
+    },
+    {
+      "id": "policy",
+      "label": "paulsha-conventions",
+      "type": "security",
+      "sublabel": "變更完整性與 repo policy",
+      "responsibility": "持有 repo policy 與 change-integrity 規則；auto_build 為宣告式資料，policy engine 驗形而不執行其命令。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/auto-build.txt",
+          "line": 1,
+          "end_line": 19,
+          "excerpt_sha256": "adbe4fccc81c03f4c468d3064778da8306ff3a9ed108e835a7127828384a71c6",
+          "claim": "持有 repo policy 與 change-integrity 規則；auto_build 為宣告式資料，policy engine 驗形而不執行其命令。"
+        },
+        {
+          "path": "docs/evidence/policy.txt",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "194e6fb17c210d3dd98418302bb3d8abb975b671c33e142f34560cfecdc6ca32",
+          "claim": "持有 repo policy 與 change-integrity 規則；auto_build 為宣告式資料，policy engine 驗形而不執行其命令。"
+        }
+      ]
+    },
+    {
+      "id": "serialwrap",
+      "label": "serialwrap",
+      "type": "messagebus",
+      "sublabel": "UART 仲裁、WAL 與實體證據",
+      "responsibility": "serialwrapd 擁有真實 UART；薄客戶端共享 console，single-writer 仲裁並保存 WAL/log 原始證據；不裁決領域測試成功。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/serialwrap.txt",
+          "line": 1,
+          "end_line": 19,
+          "excerpt_sha256": "141c03521865264de125502c7859d9dd52c59bdc78c433e2e3e804939e697d2c",
+          "claim": "serialwrapd 擁有真實 UART；薄客戶端共享 console，single-writer 仲裁並保存 WAL/log 原始證據；不裁決領域測試成功。"
+        }
+      ]
+    },
+    {
+      "id": "shell",
+      "label": "paulshaclaw",
+      "type": "frontend",
+      "sublabel": "人類操作與整合入口",
+      "responsibility": "人類操作與產品入口；整合 CLI、bot、cockpit 等 surface，不擁有 workflow lifecycle、domain verdict 或長期經驗權威。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/shell-interfaces.txt",
+          "line": 1,
+          "end_line": 24,
+          "excerpt_sha256": "4739d19b6e458e488075bc201c56d024f80a667570d0b3c6d1374e90714a74d1",
+          "claim": "人類操作與產品入口；整合 CLI、bot、cockpit 等 surface，不擁有 workflow lifecycle、domain verdict 或長期經驗權威。"
+        },
+        {
+          "path": "docs/evidence/shell.txt",
+          "line": 1,
+          "end_line": 5,
+          "excerpt_sha256": "df4bce16497cb52890d78f566987d0646a2a9fa84427ea32aa29b9365667720c",
+          "claim": "人類操作與產品入口；整合 CLI、bot、cockpit 等 surface，不擁有 workflow lifecycle、domain verdict 或長期經驗權威。"
+        }
+      ]
+    },
+    {
+      "id": "testpilot",
+      "label": "testpilot-core",
+      "type": "backend",
+      "sublabel": "測試執行、證據與報告",
+      "responsibility": "Plugin-based host framework；在 core-owned path 協調測試生命週期、保存 evidence/trace 和 plugin evaluate() 產生的 canonical verdict。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/testpilot-verdict.txt",
+          "line": 1,
+          "end_line": 6,
+          "excerpt_sha256": "1c9955c9fdc838534e9a51e1f8a241d6b0559a5447ef2293948fa3a13f27d9fd",
+          "claim": "Plugin-based host framework；在 core-owned path 協調測試生命週期、保存 evidence/trace 和 plugin evaluate() 產生的 canonical verdict。"
+        },
+        {
+          "path": "docs/evidence/testpilot.txt",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "94c39ba9d2adb62000ac9ed73b49baa9bbfa8f1d26579b72238df0dc2a43828d",
+          "claim": "Plugin-based host framework；在 core-owned path 協調測試生命週期、保存 evidence/trace 和 plugin evaluate() 產生的 canonical verdict。"
+        }
+      ]
+    }
+  ],
+  "boundaries": [],
+  "relations": [
+    {
+      "id": "agent-memory",
+      "from": "agents",
+      "to": "hippo",
+      "label": "匯入工作紀錄",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/hippo-pipeline.txt",
+          "line": 1,
+          "end_line": 8,
+          "excerpt_sha256": "696ae4fa5254bf53701189fd3282e0ca19ebb372d3936b473119866c628275af",
+          "claim": "Session hooks / transcripts 匯入 Hippo；實際覆蓋度取決於 host 設定。"
+        },
+        {
+          "path": "docs/evidence/shell-interfaces.txt",
+          "line": 1,
+          "end_line": 24,
+          "excerpt_sha256": "4739d19b6e458e488075bc201c56d024f80a667570d0b3c6d1374e90714a74d1",
+          "claim": "Session hooks / transcripts 匯入 Hippo；實際覆蓋度取決於 host 設定。"
+        }
+      ]
+    },
+    {
+      "id": "agent-tools",
+      "from": "agents",
+      "to": "testpilot",
+      "label": "可呼叫測試 CLI",
+      "variant": "dashed",
+      "basis": "inferred",
+      "evidence": [
+        {
+          "path": "docs/evidence/profile-intent.txt",
+          "line": 1,
+          "end_line": 12,
+          "excerpt_sha256": "f6db55af56cdab57e22951aefabc47312526340bb251ee22ea4d2802228c932a",
+          "claim": "原 profile 宣告建置後 TestPilot 驗證的組合意圖；TestPilot 公開 CLI/SDK 能承接測試。僅推論 Agent 可依任務呼叫，未找到 Cortex 對 TestPilot 的硬編碼 runtime 依賴，亦未執行端到端驗證。"
+        },
+        {
+          "path": "docs/evidence/testpilot-scope.txt",
+          "line": 1,
+          "end_line": 17,
+          "excerpt_sha256": "5e17c809e4dc3dac33a96d9dcb11a9fc1bdab9436137eb1a6f8c297ea7357595",
+          "claim": "原 profile 宣告建置後 TestPilot 驗證的組合意圖；TestPilot 公開 CLI/SDK 能承接測試。僅推論 Agent 可依任務呼叫，未找到 Cortex 對 TestPilot 的硬編碼 runtime 依賴，亦未執行端到端驗證。"
+        }
+      ],
+      "reasoning": "原 profile 宣告建置後 TestPilot 驗證的組合意圖；TestPilot 公開 CLI/SDK 能承接測試。僅推論 Agent 可依任務呼叫，未找到 Cortex 對 TestPilot 的硬編碼 runtime 依賴，亦未執行端到端驗證。"
+    },
+    {
+      "id": "cortex-dispatch",
+      "from": "cortex",
+      "to": "agents",
+      "label": "派送工作",
+      "variant": "emphasis",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/cortex.txt",
+          "line": 1,
+          "end_line": 21,
+          "excerpt_sha256": "f44ca5b9f6815cb1a3fcc3c53512b0dde7a6afeab0473c9d6182905a6989a8b4",
+          "claim": "Cortex coordinator 派送受 Persona 契約約束的工作給 AgentInstance。"
+        }
+      ]
+    },
+    {
+      "id": "cortex-policy",
+      "from": "cortex",
+      "to": "policy",
+      "label": "preflight adapter",
+      "variant": "security",
+      "basis": "observed",
+      "evidence": [
+        {
+          "path": "docs/evidence/cortex-preflight.txt",
+          "line": 1,
+          "end_line": 6,
+          "excerpt_sha256": "5e9b40e173abd44c17e55b5785714f05e94c2bfa49b85acd706dbf4bd855ce90",
+          "claim": "Cortex preflight adapter 的 backend module 明定 policy_check.preflight；透過 typed argv spawn，而不是複製 policy engine。"
+        }
+      ]
+    },
+    {
+      "id": "cortex-remote",
+      "from": "cortex",
+      "to": "github",
+      "label": "檢查與推進 PR",
+      "basis": "observed",
+      "evidence": [
+        {
+          "path": "docs/evidence/cortex-github.txt",
+          "line": 1,
+          "end_line": 43,
+          "excerpt_sha256": "472f0d44dc770ca14b5779570702a7c96059c29980490693610baa2725ff7944",
+          "claim": "GitHubDeliveryClient 以 ShipOrchestrator capability 限制 merge，先取得遠端 delivery facts 並執行 final gate。"
+        }
+      ]
+    },
+    {
+      "id": "github-policy",
+      "from": "github",
+      "to": "policy",
+      "label": "PR CI（依設定）",
+      "variant": "security",
+      "basis": "observed",
+      "evidence": [
+        {
+          "path": "docs/evidence/policy-ci.txt",
+          "line": 1,
+          "end_line": 14,
+          "excerpt_sha256": "e2e4a242df7132db00594494a8984c75d400a8b7674fa291a9c55ead36ef086d",
+          "claim": "paulshaclaw 的 pull_request CI 以完整 SHA pin 呼叫 Conventions reusable policy workflow；此箭頭不宣稱每個 repo 已採用同一 CI。"
+        }
+      ]
+    },
+    {
+      "id": "hardware-transport",
+      "from": "serialwrap",
+      "to": "hardware",
+      "label": "獨占 UART 通訊",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/serialwrap.txt",
+          "line": 1,
+          "end_line": 19,
+          "excerpt_sha256": "141c03521865264de125502c7859d9dd52c59bdc78c433e2e3e804939e697d2c",
+          "claim": "serialwrapd 獨占真實 UART，客戶端經仲裁提交命令並觀察原始 RX / WAL。"
+        }
+      ]
+    },
+    {
+      "id": "lab-evaluation",
+      "from": "patchmud",
+      "to": "agents",
+      "label": "隔離 CLI 評測",
+      "variant": "dashed",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/patchmud-cli.txt",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "963159fc7d9de9ad814690ac4d03140238fa3ae122ce22e9b6e3977a2a5ed05c",
+          "claim": "PatchMUD 以工具寫入停用、臨時空目錄的 CLI adapter 量測候選；此類別與 Cortex 生產執行器不是同一程序。"
+        },
+        {
+          "path": "docs/evidence/patchmud.txt",
+          "line": 1,
+          "end_line": 10,
+          "excerpt_sha256": "462626f9c8fd450d7576fcb91e34e798936e286b25439983579e9b0f7d0868c9",
+          "claim": "PatchMUD 以工具寫入停用、臨時空目錄的 CLI adapter 量測候選；此類別與 Cortex 生產執行器不是同一程序。"
+        }
+      ]
+    },
+    {
+      "id": "memory-recall",
+      "from": "hippo",
+      "to": "agents",
+      "label": "回灌經驗脈絡",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/hippo-pipeline.txt",
+          "line": 1,
+          "end_line": 8,
+          "excerpt_sha256": "696ae4fa5254bf53701189fd3282e0ca19ebb372d3936b473119866c628275af",
+          "claim": "Hippo wakeup / recall 對 agent 工作提供經驗脈絡，不接管派工權威。"
+        },
+        {
+          "path": "docs/evidence/shell-interfaces.txt",
+          "line": 1,
+          "end_line": 24,
+          "excerpt_sha256": "4739d19b6e458e488075bc201c56d024f80a667570d0b3c6d1374e90714a74d1",
+          "claim": "Hippo wakeup / recall 對 agent 工作提供經驗脈絡，不接管派工權威。"
+        }
+      ]
+    },
+    {
+      "id": "plugin-serial",
+      "from": "plugins",
+      "to": "serialwrap",
+      "label": "UART 工作流才使用",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/reliability-plugin.txt",
+          "line": 1,
+          "end_line": 12,
+          "excerpt_sha256": "cbad34466c0e4d31641c28aa1c39abe5f10bb8556420b3cd856c8296c5427cf9",
+          "claim": "公開 serialwrap_reliability 是 PluginBase 的實機測試前端；UART 是特定 plugin 工作流的選項，sample_echo 不需要硬體。"
+        },
+        {
+          "path": "docs/evidence/testpilot-scope.txt",
+          "line": 1,
+          "end_line": 17,
+          "excerpt_sha256": "5e17c809e4dc3dac33a96d9dcb11a9fc1bdab9436137eb1a6f8c297ea7357595",
+          "claim": "公開 serialwrap_reliability 是 PluginBase 的實機測試前端；UART 是特定 plugin 工作流的選項，sample_echo 不需要硬體。"
+        }
+      ]
+    },
+    {
+      "id": "shell-control",
+      "from": "shell",
+      "to": "cortex",
+      "label": "control client / CLI",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/shell-interfaces.txt",
+          "line": 1,
+          "end_line": 24,
+          "excerpt_sha256": "4739d19b6e458e488075bc201c56d024f80a667570d0b3c6d1374e90714a74d1",
+          "claim": "Shell 經 control client / CLI shim 使用 Cortex；不保留治理平面實作。"
+        }
+      ]
+    },
+    {
+      "id": "soak-transport",
+      "from": "log-generator",
+      "to": "serialwrap",
+      "label": "重啟與日誌觀測",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/soak.txt",
+          "line": 1,
+          "end_line": 6,
+          "excerpt_sha256": "43659fcb3708ef68d1ea58f48c15c18f7911332fe00d6acfef78fb3b1fe94b93",
+          "claim": "log-generator toolkit 透過 serialwrap 跑實機重啟 soak，而非單純產生仿真日誌。"
+        }
+      ]
+    },
+    {
+      "id": "testpilot-plugin",
+      "from": "testpilot",
+      "to": "plugins",
+      "label": "執行步驟、採用判定",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/testpilot-verdict.txt",
+          "line": 1,
+          "end_line": 6,
+          "excerpt_sha256": "1c9955c9fdc838534e9a51e1f8a241d6b0559a5447ef2293948fa3a13f27d9fd",
+          "claim": "Core 執行 plugin 測試生命週期並保存 plugin evaluate() 的 canonical verdict；可選 agent intervention 不等於通過。"
+        },
+        {
+          "path": "docs/evidence/testpilot.txt",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "94c39ba9d2adb62000ac9ed73b49baa9bbfa8f1d26579b72238df0dc2a43828d",
+          "claim": "Core 執行 plugin 測試生命週期並保存 plugin evaluate() 的 canonical verdict；可選 agent intervention 不等於通過。"
+        }
+      ]
+    }
+  ],
+  "unknowns": [
+    {
+      "id": "deployed-combination",
+      "question": "這組各 repo 的 source HEAD 是否就是任一機器實際共同安裝的相依版本？",
+      "impact": "不是部署盤點；跨 repo SHA pin 可能不同，不宣稱此快照是已驗證的整套 release。"
+    },
+    {
+      "id": "end-to-end-acceptance",
+      "question": "Cortex → Agent → TestPilot → PR gate → Hippo 的特定整合是否已完成實機端到端驗收？",
+      "impact": "未於本次執行；可呼叫測試 CLI 為條件式推論，不宣稱自動維護全閉環已上線。"
+    },
+    {
+      "id": "memory-outcome-feedback",
+      "question": "每次交付的 outcome 是否都已正確回寫 Hippo 並改善後續任務？",
+      "impact": "Hook/recall/attribution 是可用契約，完整覆蓋度與學習效果必須另有運行證據。"
+    },
+    {
+      "id": "pages-publication",
+      "question": "GitHub Pages 是否已從此 repo 的 main /docs 發布？",
+      "impact": "本次不改 Pages 設定；index.html 可下載後直接 file:// 開啟，README 的相對連結不是已發布網站承諾。"
+    }
+  ],
+  "conflicts": []
+}

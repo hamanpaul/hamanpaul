@@ -1,146 +1,82 @@
-# Paul Haman
+# Paul / hamanpaul
 
-**嵌入式系統 (Embedded Systems) · Agentic Engineering · 受治理的自主軟體維護與記憶生態**
+**嵌入式系統工程 · Agentic Engineering · 有邊界、可驗證、能累積經驗的自主工程**
 
-我正在構建一套以嵌入式裝置通訊為基礎的受治理自主工程與維護系統。系統涵蓋底層硬體 Transport 通訊、可解耦的 Agent 架構（Operator Shell / 記憶基座 / 治理平面 / 確定性評測），以及跨專案 Policy-as-Code 治理規範。
+我從裝置通訊、韌體整合與測試自動化出發，正在把日常工程工作整理成一套可協作的工具生態。
+重點不是讓更多 Agent 同時寫 code，而是把「誰決定、誰執行、誰驗證、誰記住」分清楚，讓工具失敗時仍能依證據恢復，而不是重新猜一次。
 
-> **核心願景**：目標不是讓 AI 自己宣稱「修好了」，而是讓診斷、變更、建置、驗證與治理都有據可查，交由 deterministic gate 確定性驗證放行，並將除錯經驗固化回傳至記憶系統，實現持續省力的工程閉環。
+> **想做到的事：Agent 可以提出解法，但不能只憑一句「完成了」放行。**
+> 從原始 log、問題定義、變更、測試，到 review 與交付，都應留下可追溯的 artifacts；有用的經驗再回到下一次工作。
 
----
+## 架構入口
 
-## 系統層級與關係 (System Architecture)
+**[互動式架構圖：docs/index.html](docs/index.html)** · [架構事實 facts.json](docs/facts.json) · [Archify 投影 architecture.json](docs/architecture.json) · [來源版本與摘錄索引](docs/source-manifest.json)
 
-```mermaid
-flowchart TD
-    HW["DUT / STA / Real Hardware (UART / Serial)"]
+GitHub 檔案頁不會直接執行 HTML。下載 `docs/index.html` 後以瀏覽器開啟，即可使用縮放、搜尋、聚焦、關係追蹤與來源檢視；不需要啟動 server。檔名也適合日後以 GitHub Pages 從 `main /docs` 發布，但本次文件更新不代表 Pages 已啟用。
 
-    subgraph P1["① 硬體通訊基礎設施 (Hardware Transport)"]
-        SW["serialwrap<br/>UART Broker (Multi-master)"]
-        LOGGEN["log-generator<br/>Reboot Stress Log Toolkit"]
-    end
+圖中內容以繁體中文撰寫；上游 Archify 的固定操作介面目前回退為英文。這是**公開 repo 的責任與代表性接點圖**，不是共同部署版本的證明，也不是完整 import graph。「可呼叫測試 CLI」與「隔離 CLI 評測」分別標示條件式組合與實驗室呼叫；線條樣式沿用 Archify 類型，不代表已部署程度，具體 `observed` / `declared` / `inferred` 依 `facts.json` 為準。
 
-    subgraph P2["② 解耦 Agent 生態系 (PaulSha Architecture)"]
-        direction LR
-        CLAW["paulshaclaw 🦞<br/>Operator Shell (Task & Interop)"]
-        HIPPO["paulsha-hippo 🦛<br/>Memory Base (Distill / Dream / Wakeup)"]
-        CORTEX["paulsha-cortex 🧠<br/>Governance Plane (Persona / Control / Dispatch)"]
-        MUD["paulsha-patchmud ⚔️<br/>Benchmark Engine (MUD Evaluation)"]
-    end
+## 誰負責什麼
 
-    subgraph P3["③ 確定性建置與驗證 Plane (Build & Verification)"]
-        direction LR
-        BUILD["paulsha-conventions/auto_build<br/>per-project 契約建置"]
-        TP["testpilot-core<br/>Plugin Runtime & Deterministic Verdict Kernel"]
-    end
+同一個「完成」，在不同層有不同意思。裝置回應了，不代表測試通過；測試通過了，不代表 PR 可合併；Agent 退出了，也不代表工作已交付。
 
-    subgraph P4["④ 跨專案治理與基礎設施 (Governance & Infra)"]
-        direction LR
-        GOV["paulsha-conventions<br/>Cross-Repo Policy Gate & CI Sync"]
-        TPL["new-project-template<br/>Conventions Template Skeleton"]
-        GH[".github<br/>Account-wide Health Defaults"]
-    end
+| 權威／平面 | Repo | 擁有的責任 | 不應越界的責任 |
+|---|---|---|---|
+| 操作入口 | [paulshaclaw](https://github.com/hamanpaul/paulshaclaw) | CLI、bot、cockpit 與 operator-facing integration | 不另建 workflow lifecycle、domain verdict 或長期記憶權威 |
+| 工作治理 | [paulsha-cortex](https://github.com/hamanpaul/paulsha-cortex) | Work / WorkflowRun / Job / Slice、派工、重試、review、delivery、completion | 不讓 domain tool 或觀測畫面自行改寫工作進度 |
+| 長期經驗 | [paulsha-hippo](https://github.com/hamanpaul/paulsha-hippo) | Provenance、recall、applied attribution、reinforce、contradict、retire | 不接管派工，不管理 vendor 登入與憑證 |
+| 變更完整性 | [paulsha-conventions](https://github.com/hamanpaul/paulsha-conventions) | Repo policy、文件與版號一致性、PR gate、generated facts 與 policy drift | 不等於領域測試引擎，也不會執行 `auto_build` 內的命令 |
+| 測試執行與證據 | [testpilot-core](https://github.com/hamanpaul/testpilot-core) | Plugin SDK、core-owned 測試生命週期、evidence / trace、結果與報告 | 領域 cases、環境操作與 `evaluate()` 語意屬於 plugin；Agent 介入本身不是 Pass |
+| 實體通訊 | [serialwrap](https://github.com/hamanpaul/serialwrap) | `serialwrapd` 擁有 UART，提供 single-writer 仲裁、共享 console、WAL 與 recovery | 不把通訊成功等同於領域測試成功 |
 
-    HW --> SW
-    SW --> LOGGEN
-    SW --> CLAW
-    CLAW <--> CORTEX
-    CLAW <--> HIPPO
-    CORTEX --> BUILD
-    BUILD --> TP
-    TP --> GOV
-    MUD -.-> CORTEX
-    TPL -.-> GOV
+上述分工依各 repo 已宣告的契約與可查核的實作整理；精確來源 SHA、原始路徑、行號與摘錄 hash 見[來源索引](docs/source-manifest.json)。不以未量測的「已上線」「Core 穩定」或通用效能倍數代替證據。
 
-    style GOV fill:#3a3a52,stroke:#c9a26a,stroke-width:2px,color:#ece6da
-    style CLAW fill:#2f3b30,stroke:#7faa7f,stroke-width:2px,color:#ece6da
-    style HIPPO fill:#2b3e4a,stroke:#6ab0c9,stroke-width:1.5px,color:#ece6da
-    style CORTEX fill:#3e2b4a,stroke:#b06ac9,stroke-width:1.5px,color:#ece6da
-    style SW fill:#25372c,stroke:#55a370,stroke-width:1.5px,color:#ece6da
-```
+### 三條重要邊界
 
----
+**操作入口不等於控制器。** `paulshaclaw` 透過 control client / CLI shim 使用 Cortex，記憶平面則交給 Hippo。Cortex 內的 Persona 是角色與範圍契約，不是執行中的 Agent；Monitor 是狀態投影，不是任意推進生命週期的第二個 Manager。
 
-## 公開專案矩陣 (Public Repositories Matrix)
+**測試生命週期不等於工作生命週期。** TestPilot 在 core-owned path 執行測試並保存 plugin 產生的 canonical verdict；Cortex 管理工程工作的交付條件。`Job exited` 不足以證明 Slice completed，還要看必要驗證、review 與候選變更是否進入目標分支。
 
-### 1. Agent 生態與治理核心 (PaulSha Architecture & Agent OS)
+**建置契約不等於建置服務。** Conventions 的 `auto_build` 是可讓執行者讀取的 per-project 宣告；policy engine 只驗其格式，不執行其中命令。真正的 build/test 仍由被授權的執行者或專案 CI 負責。Cortex 已有 `policy_check.preflight` 的 typed-argv adapter，但不因此取得領域判定權。
 
-| Repo | 主要責任 | 技術亮點 / 特色 | 狀態 Snapshot |
-|---|---|---|---:|
-| [`paulshaclaw`](https://github.com/hamanpaul/paulshaclaw) | 個人 Agent OS 的 **Operator Shell** (破蝦哥 🦞) | 保留 Shell/Integration/Operator 介面；派工與記憶已解耦至外部平面 | Operator Core |
-| [`paulsha-hippo`](https://github.com/hamanpaul/paulsha-hippo) | 跨 LLM Vendor 記憶與經驗固化基座 (🦛 Hippo) | Session 自動蒸餾成原子筆記、睡眠期（Dream）整理、隔天喚醒（Wakeup） Context 回灌 | 已上線 |
-| [`paulsha-cortex`](https://github.com/hamanpaul/paulsha-cortex) | Harness 治理平面三件套 (🧠 Cortex) | Persona 護欄契約 + Coordinator 派工 + 檔案化 Control 控制面 | 治理核心 |
-| [`paulsha-patchmud`](https://github.com/hamanpaul/paulsha-patchmud) | 純文字回合制 Coding-Agent 評測框架 (⚔️ MUD) | 零 LLM 裁判！以 Issue 為關卡、Patch 為動作，透過確定性測試進行位元級重播評分 | 評測實驗室 |
+## 從一件工程工作看協作
 
-### 2. 硬體通訊與驗證基座 (Hardware Transport & Verification)
+目標路徑是：人或上游問題來源提出工作，Cortex 依契約安排執行；Agent 帶著相關經驗與明確範圍產生 artifacts，再由對應的測試、policy 與 review 接點檢查，最後依遠端證據完成交付。經驗是否真的被閱讀、採用並改善結果，則要由 Hippo 的 attribution 與 outcome 證據回答。
 
-| Repo | 主要責任 | 技術亮點 / 特色 | 狀態 Snapshot |
-|---|---|---|---:|
-| [`serialwrap`](https://github.com/hamanpaul/serialwrap) | 多 Master UART console 仲裁與 AI 通訊基礎設施 | 單一 UART 多方安全共享 universal multiplexing，較原生 tty 提升 ~2× 速度 | 穩定運行 |
-| [`log-generator`](https://github.com/hamanpaul/log-generator) | Reboot / Power Cycle 壓測測試日誌產生器 | 提供 `serialwrap` 重啟壓力測試之仿真日誌串流與工具組 | 輔助工具 |
-| [`testpilot-core`](https://github.com/hamanpaul/testpilot-core) | Host 執行階段與確定性驗證 Kernel | Plugin-based 嵌入式驗證框架、獨立狀態審計、嚴格 CLI 門禁 | Core 穩定 |
+對裝置驗證，可以使用 **TestPilot → domain plugin → serialwrap → DUT / STA**；對不需硬體的測試，plugin 不必經過 UART。公開例子包括 TestPilot 的 [`sample_echo`](https://github.com/hamanpaul/testpilot-core/tree/main/examples/sample_echo) 與 serialwrap 的 [`serialwrap_reliability`](https://github.com/hamanpaul/serialwrap/tree/main/reliability)。
 
-### 3. 跨專案治理與 CI 規範 (Governance & CI Infrastructure)
+圖中的 **Agent → TestPilot** 是「可依任務呼叫測試 CLI」的條件式組合，**不是 Cortex 已內建 TestPilot 專用派工的宣稱**。這次盤點沒有執行整條跨 repo 實機 E2E，也不宣稱所有交付 outcome 已自動回寫 Hippo。缺口保留在 `facts.json` 的 `unknowns`，不靠畫一條箭頭就視為完成整合。
 
-| Repo | 主要責任 | 技術亮點 / 特色 | 狀態 Snapshot |
-|---|---|---|---:|
-| [`paulsha-conventions`](https://github.com/hamanpaul/paulsha-conventions) | 跨 Repo Policy 守門員與規範驗證器 | 定義 `auto_build` 重現契約、版本/Changelog 規範、PR Gate 與 Workflow 鎖定 | Policy Gate 運行中 |
-| [`new-project-template`](https://github.com/hamanpaul/new-project-template) | 符合 `paulsha-conventions` 的專案骨架 | 提供 GitHub Template、最小 bootstrap、policy metadata 與 CI 檢查工作流 | 範本骨架 |
-| [`.github`](https://github.com/hamanpaul/.github) | 帳號級社群健康度與預設檔案 | 為 `hamanpaul/*` 儲存庫提供統一社群規範與 GitHub Health Defaults | 帳號基座 |
+## 評測與支援工具
 
----
+| Repo | 定位 | 與主系統的界線 |
+|---|---|---|
+| [paulsha-patchmud](https://github.com/hamanpaul/paulsha-patchmud) | Frozen fixture、確定性評分、可重播的 coding-agent 評測實驗室 | 對 Cortex / Hippo 無 runtime 依賴；隔離 CLI 呼叫與正式工作執行不是同一程序。結果可透過檔案契約供 roster / routing 參考，不直接接管正式工作 |
+| [log-generator](https://github.com/hamanpaul/log-generator) | 透過 serialwrap 跑長時間實機 reboot-log soak，可搭配已安裝的 fault injector | 不是單純仿真 log 產生器，也不是原始 UART 證據的權威 |
+| [ask-bridge](https://github.com/hamanpaul/ask-bridge) | 以真實瀏覽器與 MCP / CDP 提供模型互動的 CLI 接點 | 支援工具，不因存在於帳號下就成為 Cortex 的必要 runtime 依賴 |
+| [new-project-template](https://github.com/hamanpaul/new-project-template) | Policy metadata、版本／changelog、agent 規範與 CI 的起始骨架 | 產生專案，不是常駐服務 |
+| [.github](https://github.com/hamanpaul/.github) | 帳號層級 community health defaults | 不承載 policy engine、workflow templates 或下游自動化邏輯 |
 
-## 關鍵技術柱石 (Key Technical Pillars)
+這不是帳號所有 repo 的清單。僅列與本文工程主軸有關、且具有公開來源的專案；私有工作與機器本地設定不納入公開架構事實。
 
-### 1. Hardware Transport
-- **`serialwrap`**：將 UART 與實體裝置通訊包裝為上層測試與診斷系統可穩定採用的 Broker。解決多 Agent 爭搶 Console 的衝突難題，實現「**One UART. Many masters. Zero collisions.**」。
+## 我在意的工程原則
 
-### 2. Decoupled PaulSha Agent Architecture
-將 Agent 系統徹底解耦為四大專精平面：
-- **Operator Shell (`paulshaclaw` 🦞)**：負責互動介面、任務編排與工具調用。
-- **Memory Base (`paulsha-hippo` 🦛)**：受海馬迴啟發，自動將對話蒸餾為原子筆記（Distillation），於背景離線期進行結構整理（Dream），並於次日任務發起時主動喚醒回灌（Wakeup Context）。
-- **Governance Plane (`paulsha-cortex` 🧠)**：提供硬性 Guardrail，透過 Persona 邊界契約與檔案化控制面約束 Agent 的變更行為。
-- **Benchmark Engine (`paulsha-patchmud` ⚔️)**：以純文字 MUD 評測模式，透過 Bit-exact 重播與確定性測試，對 Agent 的經濟性、火力與控場力進行零 LLM 裁判的公正量測。
+**一個事實，一個權威。** Runtime 狀態、領域測試結果、repo policy 與長期經驗各有自己的 owner；本 profile 只是導航，不取代任何 repo 的 canonical contract。
 
-### 3. Deterministic Build & Verification
-- **`auto_build` (`paulsha-conventions`)**：以宣告式契約定義 per-project 的可重現建置與測試步驟。
-- **`testpilot-core`**：提供確定性 Verdict 核心。AI Agent 可提出診斷報告與 Patch 建議，但是否判定 Pass / Fail 完全由 TestPilot Runtime 獨立執行與審計。
+**先有 artifact，再承認 transition。** Prompt、程序 exit code 或口頭結論都不能替代可驗證的交付證據。Deterministic gate 與必要的獨立 review 是不同層，不把所有工程判斷都誤稱為「零 LLM 裁判」。
 
----
+**自主必須有邊界。** 失敗時依既有 retry、fallback、workaround 或 escalation 推進，避免每次遇到工具障礙就擴張成重做整個工作流。遇到權限、scope 或必要證據缺失，應明確停下，而不是降低 gate。
 
-## 受治理的自動化維護閉環 (Governed Closed-Loop Maintenance Flow)
+**實體結果與學習效果都要能回查。** 裝置事實以原始輸出為準；記憶的價值看後續工作是否真的使用並改善結果，不只看累積了多少筆筆記。
 
-```mermaid
-flowchart LR
-    A["Log / Session Event<br/>(serialwrap / log-generator)"] --> B["Diagnosis Artifact<br/>& Evidence"]
-    B --> C["PaulSha Engine<br/>(Cortex Persona + Hippo Context)"]
-    C --> D["Governed Spec<br/>+ TDD Implementation"]
-    D --> E["Reproducible Build<br/>& TestPilot Verification"]
-    E --> G{"Policy Gate<br/>(paulsha-conventions)"}
-    G -->|Pass| P["Promote & Sync<br/>固化經驗至 Hippo 記憶"]
-    G -->|Fail| R["Retry / Rollback<br/>/ Escalate"]
-    R --> D
-    P -.->|經驗積累，降低同類故障成本| A
+## 目前要收斂的方向
 
-    style G fill:#3a3a52,stroke:#c9a26a,stroke-width:2px,color:#ece6da
-    style P fill:#2f3b30,stroke:#7faa7f,stroke-width:1.5px,color:#ece6da
-    style R fill:#463030,stroke:#c98a8a,stroke-width:1.5px,color:#ece6da
-```
+優先把既有能力接成可重複驗收的工作案例：減少旁邊再站一個 Agent 看顧的需求；讓工作卡住時能清楚說明原因與下一步；用相同 source / candidate / evidence 核對跨 repo 的認知；將經驗的 recall、實際採用與結果分開量測。這些是推進方向，不是本文已證明的完成狀態。
 
----
+## 文件維護
 
-## 工程原則 (Engineering Principles)
+`docs/facts.json` 是本圖唯一的語意來源；`docs/architecture.json` 保存 native Archify 投影與版面，`docs/index.html` 由固定版本的原始 Archify renderer 產生，不手改 HTML。
 
-1. **Artifact-First & Evidence-Driven**：所有診斷與修補必須附帶 log、trace 或測試案例證據，無 artifact 即視同未完成。
-2. **Deterministic Verdict**：AI 不得自我審查放行修改。測試結果與品質 gate 必須由獨立的驗證核心（TestPilot）裁決。
-3. **Decoupled Architecture**：將 Shell、Memory、Governance 與 Evaluation 模組解耦，保持極致靈活性與可移植性。
-4. **Bounded Autonomy & Fail-Close**：Agent 行為受嚴格 Persona 與 Control File 約束，遇到安全、密鑰或治理異常時強制 Fail-close。
-5. **Zero LLM-Judge Evaluation**：評測與基準（Benchmark）回絕盲目使用大模型進行主觀打分，一律以確定性測試、位元重播與測試通過率評定。
-6. **Continuous Experience Growth**：每次 Incident 的診斷與驗證結果均固化回 Hippo 記憶庫，避免重複除錯。
+來源摘錄在 `docs/evidence/`。它們是[來源索引](docs/source-manifest.json)指定公開 commit 的原始位元組，不是從架構圖倒推的證據；每筆均可比對原 repo、原路徑、原行號與 SHA-256。`facts.repository.revision` 固定到含有這些摘錄的本 repo commit，不要求等於之後的 HTML 交付 commit。
 
----
-
-## 目前關注方向 (Current Focus)
-
-- 完善 **PaulSha Agent 生態** 跨 Repo 平面協作 (`paulshaclaw` + `paulsha-hippo` + `paulsha-cortex`) 之 Golden-Path 案例。
-- 推進 **TestPilot** 確定性驗證 Kernel 與 `paulsha-conventions` 跨 Repo 自動化治理。
-- 優化 **`serialwrap`** 多 Agent 通訊與測試日誌自動感測。
+更新時先核對新來源，再改 facts；只調版面不應改動元件 ID、責任或方向。重建與檢查方式見 [`docs/BUILD.md`](docs/BUILD.md)。文件驗證、瀏覽器驗證、視覺檢視、使用者接受，以及實機 E2E 是分開的結論。

@@ -1,0 +1,450 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "PaulSha：操作、治理、證據與記憶",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1280,
+      650
+    ],
+    "repository": {
+      "url": "https://github.com/hamanpaul/hamanpaul",
+      "revision": "62fe5bc33f2c9e0c75ed58aa049bb6c632c8b644",
+      "provider": "github"
+    }
+  },
+  "components": [
+    {
+      "id": "agents",
+      "type": "external",
+      "label": "Coding Agents",
+      "sublabel": "執行器類別；不是同一個程序",
+      "pos": [
+        670,
+        30
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/cortex.txt",
+          "line": 1,
+          "end_line": 21
+        },
+        {
+          "path": "docs/evidence/patchmud-cli.txt",
+          "line": 1,
+          "end_line": 1
+        }
+      ]
+    },
+    {
+      "id": "cortex",
+      "type": "backend",
+      "label": "paulsha-cortex",
+      "sublabel": "工作生命週期與派工權威",
+      "pos": [
+        350,
+        30
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/cortex-completion.txt",
+          "line": 1,
+          "end_line": 1
+        },
+        {
+          "path": "docs/evidence/cortex.txt",
+          "line": 1,
+          "end_line": 21
+        }
+      ]
+    },
+    {
+      "id": "github",
+      "type": "external",
+      "label": "GitHub",
+      "sublabel": "Issue、PR 與遠端變更證據",
+      "pos": [
+        30,
+        190
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/cortex-github.txt",
+          "line": 1,
+          "end_line": 43
+        },
+        {
+          "path": "docs/evidence/policy-ci.txt",
+          "line": 1,
+          "end_line": 14
+        }
+      ]
+    },
+    {
+      "id": "hardware",
+      "type": "external",
+      "label": "DUT / STA",
+      "sublabel": "實體裝置與原始輸出",
+      "pos": [
+        350,
+        490
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/serialwrap.txt",
+          "line": 1,
+          "end_line": 19
+        }
+      ]
+    },
+    {
+      "id": "hippo",
+      "type": "backend",
+      "label": "paulsha-hippo",
+      "sublabel": "結果連結的長期經驗",
+      "pos": [
+        990,
+        30
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/hippo-pipeline.txt",
+          "line": 1,
+          "end_line": 8
+        },
+        {
+          "path": "docs/evidence/hippo.txt",
+          "line": 1,
+          "end_line": 5
+        }
+      ]
+    },
+    {
+      "id": "log-generator",
+      "type": "backend",
+      "label": "log-generator",
+      "sublabel": "實機 reboot / soak 測試",
+      "pos": [
+        30,
+        350
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/soak.txt",
+          "line": 1,
+          "end_line": 6
+        }
+      ]
+    },
+    {
+      "id": "patchmud",
+      "type": "backend",
+      "label": "paulsha-patchmud",
+      "sublabel": "隔離評測，不是正式維護",
+      "pos": [
+        990,
+        190
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/patchmud-cli.txt",
+          "line": 1,
+          "end_line": 1
+        },
+        {
+          "path": "docs/evidence/patchmud.txt",
+          "line": 1,
+          "end_line": 10
+        }
+      ]
+    },
+    {
+      "id": "plugins",
+      "type": "backend",
+      "label": "Domain Plugins",
+      "sublabel": "領域步驟、解析與 evaluate()",
+      "pos": [
+        670,
+        350
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/testpilot-scope.txt",
+          "line": 1,
+          "end_line": 17
+        },
+        {
+          "path": "docs/evidence/testpilot-verdict.txt",
+          "line": 1,
+          "end_line": 6
+        },
+        {
+          "path": "docs/evidence/testpilot.txt",
+          "line": 1,
+          "end_line": 1
+        }
+      ]
+    },
+    {
+      "id": "policy",
+      "type": "security",
+      "label": "paulsha-conventions",
+      "sublabel": "變更完整性與 repo policy",
+      "pos": [
+        30,
+        30
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/auto-build.txt",
+          "line": 1,
+          "end_line": 19
+        },
+        {
+          "path": "docs/evidence/policy.txt",
+          "line": 1,
+          "end_line": 1
+        }
+      ]
+    },
+    {
+      "id": "serialwrap",
+      "type": "messagebus",
+      "label": "serialwrap",
+      "sublabel": "UART 仲裁、WAL 與實體證據",
+      "pos": [
+        350,
+        350
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/serialwrap.txt",
+          "line": 1,
+          "end_line": 19
+        }
+      ]
+    },
+    {
+      "id": "shell",
+      "type": "frontend",
+      "label": "paulshaclaw",
+      "sublabel": "人類操作與整合入口",
+      "pos": [
+        350,
+        190
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/shell-interfaces.txt",
+          "line": 1,
+          "end_line": 24
+        },
+        {
+          "path": "docs/evidence/shell.txt",
+          "line": 1,
+          "end_line": 5
+        }
+      ]
+    },
+    {
+      "id": "testpilot",
+      "type": "backend",
+      "label": "testpilot-core",
+      "sublabel": "測試執行、證據與報告",
+      "pos": [
+        670,
+        190
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/testpilot-verdict.txt",
+          "line": 1,
+          "end_line": 6
+        },
+        {
+          "path": "docs/evidence/testpilot.txt",
+          "line": 1,
+          "end_line": 1
+        }
+      ]
+    }
+  ],
+  "boundaries": [],
+  "connections": [
+    {
+      "id": "agent-memory",
+      "from": "agents",
+      "to": "hippo",
+      "label": "匯入工作紀錄",
+      "labelAt": [
+        940,
+        48
+      ]
+    },
+    {
+      "id": "agent-tools",
+      "from": "agents",
+      "to": "testpilot",
+      "label": "可呼叫測試 CLI",
+      "labelAt": [
+        780,
+        155
+      ],
+      "variant": "dashed"
+    },
+    {
+      "id": "cortex-dispatch",
+      "from": "cortex",
+      "to": "agents",
+      "label": "派送工作",
+      "variant": "emphasis"
+    },
+    {
+      "id": "cortex-policy",
+      "from": "cortex",
+      "to": "policy",
+      "label": "preflight adapter",
+      "variant": "security"
+    },
+    {
+      "id": "cortex-remote",
+      "from": "cortex",
+      "to": "github",
+      "label": "檢查與推進 PR"
+    },
+    {
+      "id": "github-policy",
+      "from": "github",
+      "to": "policy",
+      "label": "PR CI（依設定）",
+      "variant": "security"
+    },
+    {
+      "id": "hardware-transport",
+      "from": "serialwrap",
+      "to": "hardware",
+      "label": "獨占 UART 通訊",
+      "labelAt": [
+        460,
+        467
+      ]
+    },
+    {
+      "id": "lab-evaluation",
+      "from": "patchmud",
+      "to": "agents",
+      "label": "隔離 CLI 評測",
+      "variant": "dashed"
+    },
+    {
+      "id": "memory-recall",
+      "from": "hippo",
+      "to": "agents",
+      "label": "回灌經驗脈絡",
+      "labelAt": [
+        940,
+        15
+      ]
+    },
+    {
+      "id": "plugin-serial",
+      "from": "plugins",
+      "to": "serialwrap",
+      "label": "UART 工作流才使用"
+    },
+    {
+      "id": "shell-control",
+      "from": "shell",
+      "to": "cortex",
+      "label": "control client / CLI"
+    },
+    {
+      "id": "soak-transport",
+      "from": "log-generator",
+      "to": "serialwrap",
+      "label": "重啟與日誌觀測"
+    },
+    {
+      "id": "testpilot-plugin",
+      "from": "testpilot",
+      "to": "plugins",
+      "label": "執行步驟、採用判定",
+      "labelAt": [
+        780,
+        315
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "責任分離",
+      "items": [
+        "Shell 提供入口；Cortex 控制工作進度；Agent 執行任務。"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "證據不是自我認證",
+      "items": [
+        "Plugin 定義領域判定；TestPilot 保存結果；實體證據由 serialwrap 提供。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "能力圖，不是上線證明",
+      "items": [
+        "「可呼叫」是條件整合；「隔離評測」不是正式派工。各 repo HEAD 不代表共同部署。"
+      ]
+    }
+  ]
+}
