@@ -53,6 +53,13 @@ jobs:
           git -C "$RUNNER_TEMP/profile-archify" checkout --quiet FETCH_HEAD
           python3 docs/build_architecture.py check-html --archify-root "$RUNNER_TEMP/profile-archify/archify" | tee architecture-evidence/native-delivery.json
           git diff --exit-code -- README.md docs/facts.json docs/architecture.json docs/index.html
+      - name: Install Chinese fonts for truthful visual evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk
+          fc-match ':lang=zh-tw' | tee architecture-evidence/cjk-font.txt
       - name: Real file navigation and desktop browser evidence
         shell: bash
         run: |
