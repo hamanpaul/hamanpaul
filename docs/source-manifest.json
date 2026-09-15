@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "scope": "Public README declarations, not runtime E2E proof",
+  "sources": [
+    {
+      "repository": "hamanpaul/.github",
+      "revision": "069b1fecc90ca43e65af4a749248c934c21bd9e9",
+      "path": "README.md",
+      "blob_sha": "5fba7034903e8eb883fc39d464adc45349a80ce1",
+      "sha256": "3eef657b175bf05e971ed9d941561ae1219966c735fba711680d48039702a1e2",
+      "snapshot": "docs/evidence/.github/README.md",
+      "url": "https://github.com/hamanpaul/.github/blob/069b1fecc90ca43e65af4a749248c934c21bd9e9/README.md",
+      "visibility": "public"
+    },
+    {
+      "repository": "hamanpaul/log-generator",
+      "revision": "4fadda8f6e84600272df97cde38608a8b6530c51",
+      "path": "README.md",
+      "blob_sha": "df82acb2cb03f9dba5915a83d78057ea3ac6174a",
+      "sha256": "e5edd6c16732af13349d573f695be8a7fdcec84420e8c859ae4a3276594ff38f",
+      "snapshot": "docs/evidence/log-generator/README.md",
+      "url": "https://github.com/hamanpaul/log-generator/blob/4fadda8f6e84600272df97cde38608a8b6530c51/README.md",
+      "visibility": "public"
+    },
+    {
+      "repository": "hamanpaul/new-project-template",
+      "revision": "a80b033a8efcc5bb4787666990e913ebfd0d5bee",
+      "path": "README.md",
+      "blob_sha": "06412532601307e1ecea7c36226ba05dfeb28a61",
+      "sha256": "3c6d1d9de9d97a86d7b484b9014b43ad7dc0fe4e86e7b5afe0f2cc11904215d0",
+      "snapshot": "docs/evidence/new-project-template/README.md",
+      "url": "https://github.com/hamanpaul/new-project-template/blob/a80b033a8efcc5bb4787666990e913ebfd0d5bee/README.md",
+      "visibility": "public"
+    },
+    {
+      "repository": "hamanpaul/paulsha-conventions",
+      "revision": "b281c5da5cda0b7e3c67e148c759d99304893c56",
+      "path": "README.md",
+      "blob_sha": "210bf3d19040a38cd9e9305fa436b1f5d47c47e6",
+      "sha256": "b8a0fd0efd11c08b8eedad01ddca8eedcad987839efe281d4aa5899569393368",
+      "snapshot": "docs/evidence/paulsha-conventions/README.md",
+      "url": "https://github.com/hamanpaul/paulsha-conventions/blob/b281c5da5cda0b7e3c67e148c759d99304893c56/README.md",
+      "visibility": "public"
+    },
+    {
+      "repository": "hamanpaul/paulsha-cortex",
+      "revision": "d43e8d80a398122e2881c16c16421c41d8b7731c",
+      "path": "README.md",
+      "blob_sha": "c5040060480b312af5c391b07fda79f6f20036bf",
+      "sha256": "c66d517808e6ee203d3367d974703b86037a02c55d203d387227682dc6c98b3b",
+      "snapshot": "docs/evidence/paulsha-cortex/README.md",
+      "url": "https://github.com/hamanpaul/paulsha-cortex/blob/d43e8d80a398122e2881c16c16421c41d8b7731c/README.md",
+      "visibility": "public"
+    },
+    {
+      "repository": "hamanpaul/paulsha-hippo",
+      "revision": "a246070ac334c0e10db895cb12a2eb2e5b8857d4",
+      "path": "README.md",
+      "blob_sha": "793dc994313476e5a14006dd363e173dbca48cc7",
+      "sha256": "c5c20d663ad1aa29225f75af814a65ee50e17300cf600bc5abae7a4be8698696",
+      "snapshot": "docs/evidence/paulsha-hippo/README.md",
+      "url": "https://github.com/hamanpaul/paulsha-hippo/blob/a246070ac334c0e10db895cb12a2eb2e5b8857d4/README.md",
+      "visibility": "public"
+    },
+    {
+      "repository": "hamanpaul/paulsha-patchmud",
+      "revision": "1184c9e33d5511648b9adbab147780cbd3a0322f",
+      "path": "README.md",
+      "blob_sha": "662c559e0d58c86bbadb8fcc4ef568fff4d86055",
+      "sha256": "e0972d089b81a12e0e228b264d2fb44d2ecfd7e415708cfd560174c3a2371fea",
+      "snapshot": "docs/evidence/paulsha-patchmud/README.md",
+      "url": "https://github.com/hamanpaul/paulsha-patchmud/blob/1184c9e33d5511648b9adbab147780cbd3a0322f/README.md",
+      "visibility": "public"
+    },
+    {
+      "repository": "hamanpaul/paulshaclaw",
+      "revision": "71feb775322fd41408be601324f3bac9aac33ff9",
+      "path": "README.md",
+      "blob_sha": "6f3f5dbaca571c39ef3c7936505befb34b9a0efb",
+      "sha256": "7fa4cd32d386477a337b3ae16fd2fdf9ddefda797631b9d9e815171bbb8d1cb3",
+      "snapshot": "docs/evidence/paulshaclaw/README.md",
+      "url": "https://github.com/hamanpaul/paulshaclaw/blob/71feb775322fd41408be601324f3bac9aac33ff9/README.md",
+      "visibility": "public"
+    },
+    {
+      "repository": "hamanpaul/serialwrap",
+      "revision": "5d65277c8abdda6793050e191704d0234be03357",
+      "path": "README.md",
+      "blob_sha": "2765fb2aa17532cd73f195c59e9a1793f47cd91d",
+      "sha256": "1fe5100bc4aedf2a40617ccfbf3a57873b17f17e8eb82447fddfabbdf3da2dc5",
+      "snapshot": "docs/evidence/serialwrap/README.md",
+      "url": "https://github.com/hamanpaul/serialwrap/blob/5d65277c8abdda6793050e191704d0234be03357/README.md",
+      "visibility": "public"
+    },
+    {
+      "repository": "hamanpaul/testpilot-core",
+      "revision": "bf84dc25c94a584904cecd2e26758bdb898572bb",
+      "path": "README.md",
+      "blob_sha": "4b9a8414c0c97edc999623b43cd393ce6f2a1bad",
+      "sha256": "519e3572d26408f7dcfd9418abe3912b275a9e29344cf6e844ab7bd904eca89f",
+      "snapshot": "docs/evidence/testpilot-core/README.md",
+      "url": "https://github.com/hamanpaul/testpilot-core/blob/bf84dc25c94a584904cecd2e26758bdb898572bb/README.md",
+      "visibility": "public"
+    }
+  ]
+}
