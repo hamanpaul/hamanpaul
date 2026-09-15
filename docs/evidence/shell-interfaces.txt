@@ -1,0 +1,24 @@
+    vendors -->|transcripts| MEM
+    MEM -->|wake-up brief| vendors
+    shell -->|operator UX / integration| vendors
+    shell -->|control client / CLI shim| cortex
+    shell -->|memory-facing integration| hippo
+```
+
+一句話關係：**`paulshaclaw` 是你每天碰到的 operator shell；`paulsha-hippo` 管記憶；`paulsha-cortex` 管治理與常駐服務。**
+
+---
+
+## 哪些東西住在哪裡
+
+| 平面 | 現在的 repo | 角色 |
+|---|---|---|
+| 記憶平面 | [paulsha-hippo](https://github.com/hamanpaul/paulsha-hippo) | transcript importer、atomizer、MOC、wake-up、dream、memory policy / ledger |
+| 治理平面 | [paulsha-cortex](https://github.com/hamanpaul/paulsha-cortex) | `control`、`coordinator`、`deck`、`persona`、`monitor`、systemd / daemon lifecycle |
+| Operator shell | **本 repo `paulshaclaw`** | `core`、`bot`、`cockpit`、`cost`、`deploy`、`security`、shell 腳本、CLI shim、operator-facing integration |
+
+### 已遷移，但本 repo 仍保留的接點
+
+- **記憶平面**：本 repo 透過相依 pin 與 shell/integration 邊界對接 `paulsha-hippo`；`psc memory` 只保留 tombstone 指引。
+- **治理平面**：本 repo 只允許碰 `paulsha_cortex.control.client` 與 `paulsha_cortex.cli`；`psc coordinator|deck|monitor` 會 lazy-import / shim 到 cortex CLI。
+- **服務啟動**：[`scripts/start.sh`](./scripts/start.sh) 不再自帶 repo 內 manager 實作，改成委派 `python -m paulsha_cortex.cli install service`；若使用者環境沒有可用的 `systemctl --user`，才退回本地 fallback 啟動 cortex service entrypoints。

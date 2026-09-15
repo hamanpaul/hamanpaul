@@ -1,0 +1,12 @@
+from testpilot.api import PluginBase, PreparedRun
+
+from serialwrap_reliability import core
+from serialwrap_reliability.testbed_loader import testbed_to_cfg
+
+
+class PreflightRefused(RuntimeError):
+    """suite-refuse：preflight 缺項時整場拒跑。"""
+
+
+class Plugin(PluginBase):
+    """serialwrap-reliability：realhw 引擎的 testpilot 前端。"""

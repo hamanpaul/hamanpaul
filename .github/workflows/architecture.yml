@@ -1,56 +1,76 @@
-name: Profile Architecture
+name: Architecture documentation
+
 on:
   pull_request:
+    paths:
+      - README.md
+      - docs/**
+      - .github/workflows/architecture.yml
   push:
-    branches: [main]
+    branches: [main, docs/profile-architecture]
+    paths:
+      - README.md
+      - docs/**
+      - .github/workflows/architecture.yml
+
 permissions:
   contents: read
+
+concurrency:
+  group: architecture-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  verify:
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+  architecture-gates:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      ARCHIFY_UPDATE_CHECK_DISABLED: '1'
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Require committed canonical artifacts
-        run: test -f docs/facts.json && test -f docs/index.json && test -f docs/index.html
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@v4
         with:
-          repository: tt-a1i/archify
-          ref: a07fa1d5b2a10cbea110c5a2be2817397a301cdc
-          path: .archify-engine
-          persist-credentials: false
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
-        with:
-          python-version: '3.12'
-      - name: Source, projection, native 9/9, and exact HTML
+          node-version: '22'
+      - name: Verify public-source provenance and semantic projection
+        shell: bash
         run: |
-          python scripts/verify_profile_architecture.py --archify-root .archify-engine/archify --receipt /tmp/profile-review/semantic-native.json
-          python -m unittest discover -s scripts -p 'test_*.py' -v
-      - name: Browser dependencies
+          set -euo pipefail
+          mkdir -p architecture-evidence
+          python3 docs/build_architecture.py snapshot --sources-root "$RUNNER_TEMP/profile-sources"
+          git diff --exit-code -- docs/evidence docs/source-manifest.json
+          python3 docs/build_architecture.py provenance --sources-root "$RUNNER_TEMP/profile-sources" | tee architecture-evidence/provenance.json
+          python3 docs/build_architecture.py verify | tee architecture-evidence/facts.json
+          python3 -m unittest discover -s docs -p test_architecture.py -v 2>&1 | tee architecture-evidence/tests.txt
+      - name: Exact re-render with pinned native Archify engine
+        shell: bash
         run: |
-          python -m pip install playwright==1.51.0
+          set -euo pipefail
+          git init -q "$RUNNER_TEMP/profile-archify"
+          git -C "$RUNNER_TEMP/profile-archify" fetch --quiet --depth=1 https://github.com/tt-a1i/archify.git d673e8300df60a5c8166abe78787fdc78f6b8000
+          git -C "$RUNNER_TEMP/profile-archify" checkout --quiet FETCH_HEAD
+          python3 docs/build_architecture.py check-html --archify-root "$RUNNER_TEMP/profile-archify/archify" | tee architecture-evidence/native-delivery.json
+          git diff --exit-code -- README.md docs/facts.json docs/architecture.json docs/index.html
+      - name: Install Chinese fonts for truthful visual evidence
+        shell: bash
+        run: |
+          set -euo pipefail
           sudo apt-get update -qq
           sudo apt-get install -y fonts-noto-cjk
-      - name: Original Archify browser evidence
-        env:
-          ARCHIFY_CHROME: /usr/bin/google-chrome
+          fc-match ':lang=zh-tw' | tee architecture-evidence/cjk-font.txt
+      - name: Real file navigation and desktop browser evidence
+        shell: bash
         run: |
-          node .archify-engine/archify/bin/archify.mjs visual-check docs/index.html --json > /tmp/profile-review/native-visual.json
-      - name: Real file navigation and semantic interactions
-        run: python scripts/check_profile_browser.py --output /tmp/profile-review/browser
-      - name: Preserve reviewed bytes and receipts
-        if: always()
-        run: |
-          mkdir -p /tmp/profile-review/deliverables
-          cp docs/index.html docs/index.json docs/facts.json docs/toolchain.json /tmp/profile-review/deliverables/
-          cp docs/index.visual-check* /tmp/profile-review/ 2>/dev/null || true
-      - uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1
+          set -euo pipefail
+          export ARCHIFY_CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          "$ARCHIFY_CHROME" --version | tee architecture-evidence/browser-version.txt
+          node "$RUNNER_TEMP/profile-archify/archify/bin/archify.mjs" visual-check docs/index.html --json | tee architecture-evidence/browser.json
+          cp docs/index.visual-check* architecture-evidence/
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: profile-architecture-review
-          path: /tmp/profile-review
+          name: architecture-evidence-${{ github.run_id }}
+          path: architecture-evidence/
           retention-days: 14

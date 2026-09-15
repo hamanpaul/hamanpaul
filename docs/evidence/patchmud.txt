@@ -1,0 +1,10 @@
+# paulsha-patchmud
+
+**PatchMUD**：成本優先的純文字回合制 coding-agent 評測框架——以軟體 issue 為關卡、程式代理模型為玩家、patch 為攻擊動作的 MUD 式評測引擎。
+
+## 定位
+
+- 量測閉環（laboratory），不是生產閉環：frozen fixture、deterministic 評分、可位元重播。
+- 對 `paulsha-cortex` / `paulsha-hippo` 零 runtime 依賴；評測輸出以檔案契約供下游（如 model roster/routing）使用。
+- 排名資料流零 LLM 裁判：所有關鍵結果由 artifact、測試、版本差異與可稽核事件日誌決定。
+- 三維角色能力：經濟（Economy 55%）、火力（Power 25%）、控場（Control 20%），另設不重複計分的 token-efficiency 稽核指標。

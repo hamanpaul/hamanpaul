@@ -1,76 +1,82 @@
-# Paul Haman
+# Paul / hamanpaul
 
-**Embedded Systems · Agentic Engineering · 以證據串起受治理的工程閉環**
+**嵌入式系統工程 · Agentic Engineering · 有邊界、可驗證、能累積經驗的自主工程**
 
-我從嵌入式裝置通訊、韌體整合與實機測試出發，逐步把日常工程工作拆成可協作、可驗證、可追溯的工具與契約。現在關注的不只是讓 Agent 寫出 patch，而是讓它知道自己能決定什麼、該交出什麼證據，以及什麼情況必須停下來。
+我從裝置通訊、韌體整合與測試自動化出發，正在把日常工程工作整理成一套可協作的工具生態。
+重點不是讓更多 Agent 同時寫 code，而是把「誰決定、誰執行、誰驗證、誰記住」分清楚，讓工具失敗時仍能依證據恢復，而不是重新猜一次。
 
-> **目標不是讓 AI 宣稱「修好了」，而是讓變更有證據、驗證有裁決、交付有紀錄，最後把經驗連回實際結果，讓下一次少走同一段彎路。**
+> **想做到的事：Agent 可以提出解法，但不能只憑一句「完成了」放行。**
+> 從原始 log、問題定義、變更、測試，到 review 與交付，都應留下可追溯的 artifacts；有用的經驗再回到下一次工作。
 
-## 系統架構
+## 架構入口
 
-**[開啟互動式架構圖](docs/index.html)** · [架構事實](docs/facts.json) · [Archify JSON](docs/index.json)
+**[互動式架構圖：docs/index.html](docs/index.html)** · [架構事實 facts.json](docs/facts.json) · [Archify 投影 architecture.json](docs/architecture.json) · [來源版本與摘錄索引](docs/source-manifest.json)
 
-這是一張跨 repo 的**責任與契約接點圖**，不是把所有專案硬串成同一個程式：`paulshaclaw` 是操作入口，`paulsha-cortex` 管工作生命週期，`paulsha-hippo` 管經驗；測試、實體通訊與 repo 規範則各有自己的權責。
+GitHub 檔案頁不會直接執行 HTML。下載 `docs/index.html` 後以瀏覽器開啟，即可使用縮放、搜尋、聚焦、關係追蹤與來源檢視；不需要啟動 server。檔名也適合日後以 GitHub Pages 從 `main /docs` 發布，但本次文件更新不代表 Pages 已啟用。
 
-圖中實線表示已宣告的核心接點，虛線表示選配或特定用途；policy 線表示變更規範，不是派工指令。所有關係均固定到公開來源的版本；**來源契約存在，不等於同一部署已完成端到端驗證**。範本與社群預設檔案列在下方矩陣，不畫成 runtime service。
+圖中內容以繁體中文撰寫；上游 Archify 的固定操作介面目前回退為英文。這是**公開 repo 的責任與代表性接點圖**，不是共同部署版本的證明，也不是完整 import graph。「可呼叫測試 CLI」與「隔離 CLI 評測」分別標示條件式組合與實驗室呼叫；線條樣式沿用 Archify 類型，不代表已部署程度，具體 `observed` / `declared` / `inferred` 依 `facts.json` 為準。
 
-GitHub 檔案頁不直接執行這份 HTML；下載或 clone 後，以瀏覽器開啟 `docs/index.html` 即可操作，不需要 server。架構文字採繁體中文；原生 Archify 的固定操作介面使用英文。本次沒有啟用或變更 GitHub Pages 設定。
+## 誰負責什麼
 
-## 公開專案矩陣
+同一個「完成」，在不同層有不同意思。裝置回應了，不代表測試通過；測試通過了，不代表 PR 可合併；Agent 退出了，也不代表工作已交付。
 
-### 1. Agent 操作、治理與經驗
+| 權威／平面 | Repo | 擁有的責任 | 不應越界的責任 |
+|---|---|---|---|
+| 操作入口 | [paulshaclaw](https://github.com/hamanpaul/paulshaclaw) | CLI、bot、cockpit 與 operator-facing integration | 不另建 workflow lifecycle、domain verdict 或長期記憶權威 |
+| 工作治理 | [paulsha-cortex](https://github.com/hamanpaul/paulsha-cortex) | Work / WorkflowRun / Job / Slice、派工、重試、review、delivery、completion | 不讓 domain tool 或觀測畫面自行改寫工作進度 |
+| 長期經驗 | [paulsha-hippo](https://github.com/hamanpaul/paulsha-hippo) | Provenance、recall、applied attribution、reinforce、contradict、retire | 不接管派工，不管理 vendor 登入與憑證 |
+| 變更完整性 | [paulsha-conventions](https://github.com/hamanpaul/paulsha-conventions) | Repo policy、文件與版號一致性、PR gate、generated facts 與 policy drift | 不等於領域測試引擎，也不會執行 `auto_build` 內的命令 |
+| 測試執行與證據 | [testpilot-core](https://github.com/hamanpaul/testpilot-core) | Plugin SDK、core-owned 測試生命週期、evidence / trace、結果與報告 | 領域 cases、環境操作與 `evaluate()` 語意屬於 plugin；Agent 介入本身不是 Pass |
+| 實體通訊 | [serialwrap](https://github.com/hamanpaul/serialwrap) | `serialwrapd` 擁有 UART，提供 single-writer 仲裁、共享 console、WAL 與 recovery | 不把通訊成功等同於領域測試成功 |
 
-| Repo | 負責什麼 | 不應混淆的界線 |
+上述分工依各 repo 已宣告的契約與可查核的實作整理；精確來源 SHA、原始路徑、行號與摘錄 hash 見[來源索引](docs/source-manifest.json)。不以未量測的「已上線」「Core 穩定」或通用效能倍數代替證據。
+
+### 三條重要邊界
+
+**操作入口不等於控制器。** `paulshaclaw` 透過 control client / CLI shim 使用 Cortex，記憶平面則交給 Hippo。Cortex 內的 Persona 是角色與範圍契約，不是執行中的 Agent；Monitor 是狀態投影，不是任意推進生命週期的第二個 Manager。
+
+**測試生命週期不等於工作生命週期。** TestPilot 在 core-owned path 執行測試並保存 plugin 產生的 canonical verdict；Cortex 管理工程工作的交付條件。`Job exited` 不足以證明 Slice completed，還要看必要驗證、review 與候選變更是否進入目標分支。
+
+**建置契約不等於建置服務。** Conventions 的 `auto_build` 是可讓執行者讀取的 per-project 宣告；policy engine 只驗其格式，不執行其中命令。真正的 build/test 仍由被授權的執行者或專案 CI 負責。Cortex 已有 `policy_check.preflight` 的 typed-argv adapter，但不因此取得領域判定權。
+
+## 從一件工程工作看協作
+
+目標路徑是：人或上游問題來源提出工作，Cortex 依契約安排執行；Agent 帶著相關經驗與明確範圍產生 artifacts，再由對應的測試、policy 與 review 接點檢查，最後依遠端證據完成交付。經驗是否真的被閱讀、採用並改善結果，則要由 Hippo 的 attribution 與 outcome 證據回答。
+
+對裝置驗證，可以使用 **TestPilot → domain plugin → serialwrap → DUT / STA**；對不需硬體的測試，plugin 不必經過 UART。公開例子包括 TestPilot 的 [`sample_echo`](https://github.com/hamanpaul/testpilot-core/tree/main/examples/sample_echo) 與 serialwrap 的 [`serialwrap_reliability`](https://github.com/hamanpaul/serialwrap/tree/main/reliability)。
+
+圖中的 **Agent → TestPilot** 是「可依任務呼叫測試 CLI」的條件式組合，**不是 Cortex 已內建 TestPilot 專用派工的宣稱**。這次盤點沒有執行整條跨 repo 實機 E2E，也不宣稱所有交付 outcome 已自動回寫 Hippo。缺口保留在 `facts.json` 的 `unknowns`，不靠畫一條箭頭就視為完成整合。
+
+## 評測與支援工具
+
+| Repo | 定位 | 與主系統的界線 |
 |---|---|---|
-| [`paulshaclaw`](https://github.com/hamanpaul/paulshaclaw) | Operator shell：CLI、bot、cockpit、部署與操作整合入口 | 接入 Cortex／Hippo，不重新擁有它們的生命週期或經驗權威 |
-| [`paulsha-cortex`](https://github.com/hamanpaul/paulsha-cortex) | Work／WorkflowRun／Job／Slice 的生命週期、派工、retry、review 與交付 | Persona 是角色契約，AgentInstance 才執行；domain tools 回傳 artifacts，不改寫工作生命週期 |
-| [`paulsha-hippo`](https://github.com/hamanpaul/paulsha-hippo) | Session 蒸餾、dream、wakeup／recall，以及來源、採用歸因與經驗生命週期 | 找到或讀到筆記不等於已採用，更不等於已證明有效；不管理外部 CLI 的登入憑證 |
-| [`paulsha-patchmud`](https://github.com/hamanpaul/paulsha-patchmud) | 凍結關卡、確定性評分與可重播的 coding-agent 評測實驗室 | 不是生產控制器；對 Cortex／Hippo 零 runtime 依賴，不把評測結果畫成自動上線指令 |
+| [paulsha-patchmud](https://github.com/hamanpaul/paulsha-patchmud) | Frozen fixture、確定性評分、可重播的 coding-agent 評測實驗室 | 對 Cortex / Hippo 無 runtime 依賴；隔離 CLI 呼叫與正式工作執行不是同一程序。結果可透過檔案契約供 roster / routing 參考，不直接接管正式工作 |
+| [log-generator](https://github.com/hamanpaul/log-generator) | 透過 serialwrap 跑長時間實機 reboot-log soak，可搭配已安裝的 fault injector | 不是單純仿真 log 產生器，也不是原始 UART 證據的權威 |
+| [ask-bridge](https://github.com/hamanpaul/ask-bridge) | 以真實瀏覽器與 MCP / CDP 提供模型互動的 CLI 接點 | 支援工具，不因存在於帳號下就成為 Cortex 的必要 runtime 依賴 |
+| [new-project-template](https://github.com/hamanpaul/new-project-template) | Policy metadata、版本／changelog、agent 規範與 CI 的起始骨架 | 產生專案，不是常駐服務 |
+| [.github](https://github.com/hamanpaul/.github) | 帳號層級 community health defaults | 不承載 policy engine、workflow templates 或下游自動化邏輯 |
 
-### 2. 實體通訊與測試驗證
+這不是帳號所有 repo 的清單。僅列與本文工程主軸有關、且具有公開來源的專案；私有工作與機器本地設定不納入公開架構事實。
 
-| Repo | 負責什麼 | 不應混淆的界線 |
-|---|---|---|
-| [`serialwrap`](https://github.com/hamanpaul/serialwrap) | `serialwrapd` 持有真實 UART；多方共享、single-writer 仲裁、WAL 與 recovery | 提供原始實體證據，不替領域測試決定 Pass／Fail |
-| [`log-generator`](https://github.com/hamanpaul/log-generator) | 透過 serialwrap 執行重啟耐久測試，支援已配置目標上的故障注入 | 是實機 reboot-log soak toolkit，不只是模擬日誌產生器 |
-| [`testpilot-core`](https://github.com/hamanpaul/testpilot-core) | Plugin-based 測試 host：SDK、執行生命週期、證據、trace、報告與 canonical verdict 保存 | 領域案例、環境操作與 `evaluate()` 語意由 plugin 定義；Agent 介入不代表驗證通過 |
+## 我在意的工程原則
 
-TestPilot 的核心擴充模型不限定嵌入式領域，但也不代表任意領域都已開箱驗證。公開參考包括不需要硬體的 `sample_echo`，以及位於 serialwrap repo 的 `serialwrap_reliability`。**只有需要 UART 的工作流程才依賴 serialwrap**；plugin 自訂 runner 的責任也不能與預設 core-owned 路徑混為一談。
+**一個事實，一個權威。** Runtime 狀態、領域測試結果、repo policy 與長期經驗各有自己的 owner；本 profile 只是導航，不取代任何 repo 的 canonical contract。
 
-### 3. Repo 規範與啟動基礎
+**先有 artifact，再承認 transition。** Prompt、程序 exit code 或口頭結論都不能替代可驗證的交付證據。Deterministic gate 與必要的獨立 review 是不同層，不把所有工程判斷都誤稱為「零 LLM 裁判」。
 
-| Repo | 負責什麼 | 不應混淆的界線 |
-|---|---|---|
-| [`paulsha-conventions`](https://github.com/hamanpaul/paulsha-conventions) | 文件、版號、分支、PR、generated facts 與 policy drift 的規範與確定性檢查 | Policy 通過不等於領域測試通過；規範引擎不接管 Cortex 的派工或交付狀態 |
-| [`new-project-template`](https://github.com/hamanpaul/new-project-template) | 新專案的最小骨架、policy metadata、agent 規範檔與固定版本的 CI workflow | Bootstrap 起點，不是常駐控制器 |
-| [`.github`](https://github.com/hamanpaul/.github) | 帳號層級 community health defaults；下游缺少個別檔案時提供支援的預設內容 | 只負責社群文件與 PR 範本，不承載 policy engine 或 workflow templates |
+**自主必須有邊界。** 失敗時依既有 retry、fallback、workaround 或 escalation 推進，避免每次遇到工具障礙就擴張成重做整個工作流。遇到權限、scope 或必要證據缺失，應明確停下，而不是降低 gate。
 
-本頁聚焦這三類核心專案，不把所有工具、fork 或私有工作 repo 都列成生態系依賴。矩陣依 [固定版本的公開來源](docs/source-manifest.json) 整理，不以「已上線／穩定」標籤代替可查證的能力與界線。
+**實體結果與學習效果都要能回查。** 裝置事實以原始輸出為準；記憶的價值看後續工作是否真的使用並改善結果，不只看累積了多少筆筆記。
 
-## 想完成的工程閉環
+## 目前要收斂的方向
 
-```text
-真實證據與明確問題
-  → 範圍受控的診斷與變更
-  → 專案建置、領域測試與獨立審查
-  → Policy 檢查與可追溯交付
-  → 帶來源、採用歸因與結果的經驗回饋
-```
+優先把既有能力接成可重複驗收的工作案例：減少旁邊再站一個 Agent 看顧的需求；讓工作卡住時能清楚說明原因與下一步；用相同 source / candidate / evidence 核對跨 repo 的認知；將經驗的 recall、實際採用與結果分開量測。這些是推進方向，不是本文已證明的完成狀態。
 
-**這是整合目標，不是目前所有箭頭都已全自動接通的保證。** 個別工具有自己的能力與契約，跨 repo 的接線仍要以具體部署和驗證產物證明。尤其不把 `Cortex → build → TestPilot → policy → Hippo` 畫成每項工作必經的既成管線，也不把 PatchMUD 的檔案輸出等同於已部署的自動 routing。
+## 文件維護
 
-完成一次工作，至少要能回答：改了什麼、用什麼證據判定、誰有權推進狀態，以及這次經驗是否真的被採用並產生結果。這些問題分別由適當的工具與契約回答，不交給同一個 Agent 自我認證。
+`docs/facts.json` 是本圖唯一的語意來源；`docs/architecture.json` 保存 native Archify 投影與版面，`docs/index.html` 由固定版本的原始 Archify renderer 產生，不手改 HTML。
 
-## 工程原則
+來源摘錄在 `docs/evidence/`。它們是[來源索引](docs/source-manifest.json)指定公開 commit 的原始位元組，不是從架構圖倒推的證據；每筆均可比對原 repo、原路徑、原行號與 SHA-256。`facts.repository.revision` 固定到含有這些摘錄的本 repo commit，不要求等於之後的 HTML 交付 commit。
 
-**一種事實，一個權威。** 操作入口、工作生命週期、領域 verdict、原始 UART 證據、repo policy 與經驗狀態各自分工；整合不代表接管別人的裁決權。
-
-**先有產物，再推進狀態。** 診斷、變更、測試與交付都應留下可核對的產物。Agent 可以提出方案，但不能以自己的說法取代獨立驗證；實體裝置的觀測也不能被推測覆蓋。
-
-**自主必須有邊界，學習必須連回結果。** 角色、範圍、預算與恢復路徑要明確；證據不足時保留 unknown，而不是補出成功故事。記憶不只追求筆記增加，更要區分 recall、applied 與後續結果。
-
-## 目前關注
-
-把跨 repo 的 Golden Path 做成可重現的整合案例；守住 TestPilot 的 core／plugin 與 Agent 建議邊界；持續改善 serialwrap 的實機通訊可靠性，以及 Hippo 經驗的來源、採用歸因與結果連結。
-
-架構的維護與驗證方式見 [架構文件說明](docs/ARCHITECTURE.md)。語意先更新 `facts.json`，再更新呈現 JSON 並以固定版本的原生 Archify 重建 HTML；不另外手改 HTML 或維護第二份矛盾拓撲。
+更新時先核對新來源，再改 facts；只調版面不應改動元件 ID、責任或方向。重建與檢查方式見 [`docs/BUILD.md`](docs/BUILD.md)。文件驗證、瀏覽器驗證、視覺檢視、使用者接受，以及實機 E2E 是分開的結論。
