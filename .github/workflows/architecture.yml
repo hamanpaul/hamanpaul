@@ -1,0 +1,50 @@
+name: Architecture documentation
+
+on:
+  push:
+    branches: [docs/profile-architecture]
+    paths:
+      - .github/workflows/architecture.yml
+      - docs/**
+      - README.md
+
+permissions:
+  contents: read
+
+jobs:
+  source-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: review/profile
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Collect public sources and pinned renderer for offline review
+        shell: bash
+        env:
+          ARCHIFY_UPDATE_CHECK_DISABLED: '1'
+        run: |
+          set -euo pipefail
+          mkdir -p review/repos
+          git clone --quiet https://github.com/tt-a1i/archify.git review/archify
+          git -C review/archify checkout --quiet d673e8300df60a5c8166abe78787fdc78f6b8000
+          for repo in paulshaclaw paulsha-cortex paulsha-hippo paulsha-conventions testpilot-core serialwrap paulsha-patchmud ask-bridge log-generator new-project-template .github; do
+            git clone --quiet --depth 1 "https://github.com/hamanpaul/${repo}.git" "review/repos/${repo}"
+          done
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          root = pathlib.Path('review')
+          pins = {}
+          for path in [root/'profile', root/'archify', *sorted((root/'repos').iterdir())]:
+              pins[str(path.relative_to(root))] = subprocess.check_output(['git','-C',str(path),'rev-parse','HEAD'], text=True).strip()
+          (root/'pins.json').write_text(json.dumps(pins, indent=2)+'\n')
+          print(json.dumps(pins, indent=2))
+          PY
+          tar -czf architecture-review-toolchain.tar.gz review
+      - uses: actions/upload-artifact@v4
+        with:
+          name: architecture-review-toolchain
+          path: architecture-review-toolchain.tar.gz
+          retention-days: 3
