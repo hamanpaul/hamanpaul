@@ -1,0 +1,521 @@
+{
+  "schema_version": 1,
+  "document_type": "architecture-facts",
+  "repository": {
+    "url": "https://github.com/hamanpaul/hamanpaul",
+    "revision": "ec017919d4fa5770bca8e859e369518c71f4eb1c"
+  },
+  "scope": {
+    "name": "公開工程生態的責任與契約接點",
+    "includes": [
+      "公開核心 repo 的責任界線",
+      "來源 README 明確宣告的操作、派工、記憶與測試接點",
+      "真實硬體與外部 executor 能力類別"
+    ],
+    "excludes": [
+      "未驗證的全自動端到端閉環",
+      "私有 repo 內容",
+      "每個 repo 的內部生命週期展開",
+      "bootstrap 範本與社群預設檔案（保留於 README 矩陣）"
+    ]
+  },
+  "components": [
+    {
+      "id": "claw",
+      "label": "paulshaclaw",
+      "type": "frontend",
+      "sublabel": "操作入口／Shell",
+      "responsibility": "人類操作、產品介面與整合入口；不擁有工作生命週期、領域 verdict 或長期經驗的最終裁決權。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/paulshaclaw/README.md",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "cba96c090f354965a5e462ccb44e1f371f3872aaeb23b90b943394b0b0b2ff3c",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ],
+      "tag": "入口"
+    },
+    {
+      "id": "cortex",
+      "label": "paulsha-cortex",
+      "type": "backend",
+      "sublabel": "工作生命週期／派工",
+      "responsibility": "治理 work、WorkflowRun、Job、Slice、retry、review 與 delivery；Persona 是角色契約，AgentInstance 才是執行個體。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/paulsha-cortex/README.md",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "c7ae8e6521880f15c08b14ed5fd1a74f19c3fe70874cc6f656ad4170cb0069d8",
+          "claim": "公開 README 宣告的責任與接點"
+        },
+        {
+          "path": "docs/evidence/paulsha-cortex/README.md",
+          "line": 21,
+          "end_line": 21,
+          "excerpt_sha256": "58ab2619aca5e7b54e8d731fb0f63378e2dd8511f012904d06d447ed3ca7a073",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ],
+      "tag": "生命週期"
+    },
+    {
+      "id": "executor",
+      "label": "外部 Agent／CLI",
+      "type": "external",
+      "sublabel": "受約束的執行與補全",
+      "responsibility": "Cortex 派工的 AgentInstance、TestPilot 選配建議與 PatchMUD adapter 使用的外部模型執行能力；這是能力類別，不表示同一行程、共用憑證或同一部署。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/paulsha-cortex/README.md",
+          "line": 21,
+          "end_line": 21,
+          "excerpt_sha256": "58ab2619aca5e7b54e8d731fb0f63378e2dd8511f012904d06d447ed3ca7a073",
+          "claim": "公開 README 宣告的責任與接點"
+        },
+        {
+          "path": "docs/evidence/paulsha-patchmud/README.md",
+          "line": 56,
+          "end_line": 56,
+          "excerpt_sha256": "963159fc7d9de9ad814690ac4d03140238fa3ae122ce22e9b6e3977a2a5ed05c",
+          "claim": "公開 README 宣告的責任與接點"
+        },
+        {
+          "path": "docs/evidence/testpilot-core/README.md",
+          "line": 97,
+          "end_line": 97,
+          "excerpt_sha256": "af7ae1efeacb52d5375a5f368b629eddf677de7636770c15807ec1a84a506442",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ],
+      "tag": "執行者"
+    },
+    {
+      "id": "hardware",
+      "label": "DUT／真實硬體",
+      "type": "external",
+      "sublabel": "UART 裝置",
+      "responsibility": "現有 UART/device 工作流程的真實測試對象；不代表 TestPilot 的所有領域都必須使用硬體。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/serialwrap/README.md",
+          "line": 51,
+          "end_line": 53,
+          "excerpt_sha256": "1b7221d1dc71b2dee237f03e43c5183896b3033c81b7027f0cc537f761f76bb9",
+          "claim": "公開 README 宣告的責任與接點"
+        },
+        {
+          "path": "docs/evidence/testpilot-core/README.md",
+          "line": 113,
+          "end_line": 113,
+          "excerpt_sha256": "bac88bf4d9c3bca4ef541a223a3337bde2059a2ba9560e66bf627fb0be511f67",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ],
+      "tag": "現場"
+    },
+    {
+      "id": "hippo",
+      "label": "paulsha-hippo",
+      "type": "database",
+      "sublabel": "經驗記憶／來源與歸因",
+      "responsibility": "管理 outcome-linked 經驗生命週期、session 蒸餾、recall、applied attribution、reinforce、contradict、retire；不是派工控制器。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/paulsha-hippo/README.md",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "f901186c402c0f47ded057bd2eacbd90dc975c02e3bd114157f006842195c276",
+          "claim": "公開 README 宣告的責任與接點"
+        },
+        {
+          "path": "docs/evidence/paulsha-hippo/README.md",
+          "line": 43,
+          "end_line": 43,
+          "excerpt_sha256": "d2b407112ae96b6b4ecac0621b158788a7534f95f9911a4457389b5825c11a0c",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ],
+      "tag": "經驗"
+    },
+    {
+      "id": "log-generator",
+      "label": "log-generator",
+      "type": "backend",
+      "sublabel": "重啟耐久／故障注入",
+      "responsibility": "透過 serialwrap 做 reboot-log soak tests；每個 selector 一個 controller，異常目標須先安裝 fault injector。不是純模擬日誌產生器。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/log-generator/README.md",
+          "line": 3,
+          "end_line": 6,
+          "excerpt_sha256": "05e6d3dc73cee51d4da8ee10f3787a90d442ae50352538d11513fde8fd603f6a",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ],
+      "tag": "測試工具"
+    },
+    {
+      "id": "patchmud",
+      "label": "paulsha-patchmud",
+      "type": "backend",
+      "sublabel": "凍結關卡／確定性評分",
+      "responsibility": "獨立評測實驗室；frozen fixtures、可重播評分、排名無 LLM 裁判，對 Cortex/Hippo 零 runtime 依賴。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/paulsha-patchmud/README.md",
+          "line": 7,
+          "end_line": 9,
+          "excerpt_sha256": "75a1f4709c35d4c2f2e349e364f6536875ad90084ecd4d39045b8013647514f0",
+          "claim": "公開 README 宣告的責任與接點"
+        },
+        {
+          "path": "docs/evidence/paulsha-patchmud/README.md",
+          "line": 56,
+          "end_line": 56,
+          "excerpt_sha256": "963159fc7d9de9ad814690ac4d03140238fa3ae122ce22e9b6e3977a2a5ed05c",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ],
+      "tag": "實驗室"
+    },
+    {
+      "id": "plugin",
+      "label": "領域 Plugin",
+      "type": "backend",
+      "sublabel": "案例／環境／evaluate",
+      "responsibility": "各專案自行定義案例、環境操作與評估語意。公開例子包括 sample_echo 與 serialwrap_reliability；並非所有 plugin 都需要硬體。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/testpilot-core/README.md",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "94c39ba9d2adb62000ac9ed73b49baa9bbfa8f1d26579b72238df0dc2a43828d",
+          "claim": "公開 README 宣告的責任與接點"
+        },
+        {
+          "path": "docs/evidence/testpilot-core/README.md",
+          "line": 74,
+          "end_line": 75,
+          "excerpt_sha256": "f19bdee181a2611d826e90c44eb8e564f109624d69c5b47119fa7d4f19169d91",
+          "claim": "公開 README 宣告的責任與接點"
+        },
+        {
+          "path": "docs/evidence/testpilot-core/README.md",
+          "line": 113,
+          "end_line": 113,
+          "excerpt_sha256": "bac88bf4d9c3bca4ef541a223a3337bde2059a2ba9560e66bf627fb0be511f67",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ],
+      "tag": "領域語意"
+    },
+    {
+      "id": "policy",
+      "label": "paulsha-conventions",
+      "type": "security",
+      "sublabel": "Repo policy／變更完整性",
+      "responsibility": "規範文件、版號、分支、PR、generated facts 與 policy drift；deterministic enforcement 不等於領域測試裁決。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/paulsha-conventions/README.md",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "194e6fb17c210d3dd98418302bb3d8abb975b671c33e142f34560cfecdc6ca32",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ],
+      "tag": "規範"
+    },
+    {
+      "id": "serialwrap",
+      "label": "serialwrap",
+      "type": "messagebus",
+      "sublabel": "UART 仲裁／原始證據",
+      "responsibility": "serialwrapd 擁有裝置 session 與真實 UART，提供 single-writer 仲裁、WAL、recovery 與薄 CLI/console clients。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/serialwrap/README.md",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "2c2734173d5bb9790b570fed2da2ecc352f391060573c9b3b6f02ad62af76bf6",
+          "claim": "公開 README 宣告的責任與接點"
+        },
+        {
+          "path": "docs/evidence/serialwrap/README.md",
+          "line": 51,
+          "end_line": 53,
+          "excerpt_sha256": "1b7221d1dc71b2dee237f03e43c5183896b3033c81b7027f0cc537f761f76bb9",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ],
+      "tag": "實體證據"
+    },
+    {
+      "id": "testpilot",
+      "label": "testpilot-core",
+      "type": "backend",
+      "sublabel": "測試生命週期／證據",
+      "responsibility": "Plugin-based host；core-owned 路徑執行測試、保存 evidence/trace 與 plugin 評估產生的 canonical verdict。可選 Agent 建議不代表測試通過。",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/testpilot-core/README.md",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "94c39ba9d2adb62000ac9ed73b49baa9bbfa8f1d26579b72238df0dc2a43828d",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ],
+      "tag": "驗證"
+    }
+  ],
+  "boundaries": [],
+  "relations": [
+    {
+      "id": "claw-cortex",
+      "from": "claw",
+      "to": "cortex",
+      "label": "client／CLI",
+      "variant": "emphasis",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/paulshaclaw/README.md",
+          "line": 65,
+          "end_line": 73,
+          "excerpt_sha256": "39a24d8332c04504b7ed798f9478b211e1e65f4767ad4e9e21e7be7908daa7bb",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ]
+    },
+    {
+      "id": "claw-hippo",
+      "from": "claw",
+      "to": "hippo",
+      "label": "記憶整合",
+      "variant": "default",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/paulshaclaw/README.md",
+          "line": 46,
+          "end_line": 50,
+          "excerpt_sha256": "ff206ed33057beb79ac127500276f574edbd9d797e4c0faf4df36c4ce68bf24d",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ]
+    },
+    {
+      "id": "cortex-executor",
+      "from": "cortex",
+      "to": "executor",
+      "label": "受治理派工",
+      "variant": "emphasis",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/paulsha-cortex/README.md",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "c7ae8e6521880f15c08b14ed5fd1a74f19c3fe70874cc6f656ad4170cb0069d8",
+          "claim": "公開 README 宣告的責任與接點"
+        },
+        {
+          "path": "docs/evidence/paulsha-cortex/README.md",
+          "line": 21,
+          "end_line": 21,
+          "excerpt_sha256": "58ab2619aca5e7b54e8d731fb0f63378e2dd8511f012904d06d447ed3ca7a073",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ]
+    },
+    {
+      "id": "executor-hippo",
+      "from": "executor",
+      "to": "hippo",
+      "label": "Session／recall",
+      "variant": "default",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/paulsha-hippo/README.md",
+          "line": 31,
+          "end_line": 31,
+          "excerpt_sha256": "4aba0b8444f52cd6ed306f8cb14d61ac64e76d7196a1230634c075f663dab6f6",
+          "claim": "提供跨 CLI recall 檢索與 applied attribution 命令。"
+        },
+        {
+          "path": "docs/evidence/paulsha-hippo/README.md",
+          "line": 43,
+          "end_line": 43,
+          "excerpt_sha256": "d2b407112ae96b6b4ecac0621b158788a7534f95f9911a4457389b5825c11a0c",
+          "claim": "公開 README 宣告的責任與接點"
+        },
+        {
+          "path": "docs/evidence/paulshaclaw/README.md",
+          "line": 46,
+          "end_line": 50,
+          "excerpt_sha256": "ff206ed33057beb79ac127500276f574edbd9d797e4c0faf4df36c4ce68bf24d",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ]
+    },
+    {
+      "id": "log-generator-serialwrap",
+      "from": "log-generator",
+      "to": "serialwrap",
+      "label": "重啟壓測",
+      "variant": "default",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/log-generator/README.md",
+          "line": 3,
+          "end_line": 6,
+          "excerpt_sha256": "05e6d3dc73cee51d4da8ee10f3787a90d442ae50352538d11513fde8fd603f6a",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ]
+    },
+    {
+      "id": "patchmud-executor",
+      "from": "patchmud",
+      "to": "executor",
+      "label": "評測補全",
+      "variant": "dashed",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/paulsha-patchmud/README.md",
+          "line": 56,
+          "end_line": 56,
+          "excerpt_sha256": "963159fc7d9de9ad814690ac4d03140238fa3ae122ce22e9b6e3977a2a5ed05c",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ]
+    },
+    {
+      "id": "plugin-serialwrap",
+      "from": "plugin",
+      "to": "serialwrap",
+      "label": "限 UART 工作流程",
+      "variant": "dashed",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/testpilot-core/README.md",
+          "line": 74,
+          "end_line": 75,
+          "excerpt_sha256": "f19bdee181a2611d826e90c44eb8e564f109624d69c5b47119fa7d4f19169d91",
+          "claim": "公開 README 宣告的責任與接點"
+        },
+        {
+          "path": "docs/evidence/testpilot-core/README.md",
+          "line": 113,
+          "end_line": 113,
+          "excerpt_sha256": "bac88bf4d9c3bca4ef541a223a3337bde2059a2ba9560e66bf627fb0be511f67",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ]
+    },
+    {
+      "id": "policy-executor",
+      "from": "policy",
+      "to": "executor",
+      "label": "提供變更規範",
+      "variant": "security",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/paulsha-conventions/README.md",
+          "line": 52,
+          "end_line": 52,
+          "excerpt_sha256": "b7cef71d0b0e4291cb021889c4ef9649d270456041847e5b4915341e159f99d3",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ]
+    },
+    {
+      "id": "serialwrap-hardware",
+      "from": "serialwrap",
+      "to": "hardware",
+      "label": "獨占 UART",
+      "variant": "emphasis",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/serialwrap/README.md",
+          "line": 51,
+          "end_line": 53,
+          "excerpt_sha256": "1b7221d1dc71b2dee237f03e43c5183896b3033c81b7027f0cc537f761f76bb9",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ]
+    },
+    {
+      "id": "testpilot-executor",
+      "from": "testpilot",
+      "to": "executor",
+      "label": "選配恢復建議",
+      "variant": "dashed",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/testpilot-core/README.md",
+          "line": 97,
+          "end_line": 97,
+          "excerpt_sha256": "af7ae1efeacb52d5375a5f368b629eddf677de7636770c15807ec1a84a506442",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ]
+    },
+    {
+      "id": "testpilot-plugin",
+      "from": "testpilot",
+      "to": "plugin",
+      "label": "執行／evaluate",
+      "variant": "emphasis",
+      "basis": "declared",
+      "evidence": [
+        {
+          "path": "docs/evidence/testpilot-core/README.md",
+          "line": 1,
+          "end_line": 1,
+          "excerpt_sha256": "94c39ba9d2adb62000ac9ed73b49baa9bbfa8f1d26579b72238df0dc2a43828d",
+          "claim": "公開 README 宣告的責任與接點"
+        }
+      ]
+    }
+  ],
+  "unknowns": [
+    {
+      "id": "deployment-e2e",
+      "question": "這些公開契約是否已在同一部署完成從診斷到交付再回灌的完整驗證？",
+      "impact": "本圖不是一次成功 runtime E2E 的證明，也不宣稱 Cortex 直接呼叫所有 domain tools。"
+    },
+    {
+      "id": "experience-outcomes",
+      "question": "每次修補是否都有可追溯 applied attribution 與後續結果？",
+      "impact": "不能把所有 session 蒸餾或 recall 視為已證實有效的經驗。"
+    },
+    {
+      "id": "routing-consumption",
+      "question": "PatchMUD 匯出是否已被部署中的 Cortex routing 自動採納？",
+      "impact": "不畫出 PatchMUD 到 Cortex 的已接通 runtime/routing 邊。"
+    }
+  ],
+  "conflicts": []
+}
