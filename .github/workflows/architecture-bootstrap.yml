@@ -1,0 +1,47 @@
+name: Architecture Bootstrap
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+jobs:
+  freeze-public-evidence:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'feature/profile-architecture-facts'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Freeze the already inspected public sources
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ ! -f docs/source-manifest.json ]; then
+            python3 scripts/freeze_sources.py
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add docs/evidence docs/source-manifest.json
+            git commit -m 'docs(architecture): freeze public source evidence'
+            git push origin HEAD:refs/heads/feature/profile-architecture-facts
+          fi
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: tt-a1i/archify
+          ref: a07fa1d5b2a10cbea110c5a2be2817397a301cdc
+          path: .archify-engine
+          persist-credentials: false
+      - name: Package source-pinned local verification inputs
+        run: |
+          mkdir -p /tmp/architecture-inputs
+          git bundle create /tmp/architecture-inputs/profile.bundle --all
+          tar --exclude=.git -czf /tmp/architecture-inputs/archify.tar.gz -C .archify-engine .
+          git rev-parse HEAD > /tmp/architecture-inputs/source-revision.txt
+      - uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1
+        with:
+          name: architecture-inputs
+          path: /tmp/architecture-inputs
+          retention-days: 3

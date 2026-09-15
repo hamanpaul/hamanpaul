@@ -1,0 +1,17 @@
+{
+  "archify_repository": "tt-a1i/archify",
+  "archify_revision": "a07fa1d5b2a10cbea110c5a2be2817397a301cdc",
+  "fact_layer_revision": "c9510a2299b44a9fc6b6c75186ef2aa533abb6ef",
+  "sources": {
+    ".github": "5fba7034903e8eb883fc39d464adc45349a80ce1",
+    "log-generator": "df82acb2cb03f9dba5915a83d78057ea3ac6174a",
+    "new-project-template": "06412532601307e1ecea7c36226ba05dfeb28a61",
+    "paulsha-conventions": "210bf3d19040a38cd9e9305fa436b1f5d47c47e6",
+    "paulsha-cortex": "c5040060480b312af5c391b07fda79f6f20036bf",
+    "paulsha-hippo": "793dc994313476e5a14006dd363e173dbca48cc7",
+    "paulsha-patchmud": "662c559e0d58c86bbadb8fcc4ef568fff4d86055",
+    "paulshaclaw": "6f3f5dbaca571c39ef3c7936505befb34b9a0efb",
+    "serialwrap": "2765fb2aa17532cd73f195c59e9a1793f47cd91d",
+    "testpilot-core": "4b9a8414c0c97edc999623b43cd393ce6f2a1bad"
+  }
+}
