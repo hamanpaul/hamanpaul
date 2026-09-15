@@ -5,46 +5,87 @@ on:
     branches: [docs/profile-architecture]
     paths:
       - .github/workflows/architecture.yml
-      - docs/**
-      - README.md
 
 permissions:
   contents: read
 
 jobs:
-  source-review:
+  prepare-reviewed-documentation:
+    if: github.repository == 'hamanpaul/hamanpaul' && github.ref == 'refs/heads/docs/profile-architecture'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    env:
+      ARCHIFY_UPDATE_CHECK_DISABLED: '1'
     steps:
       - uses: actions/checkout@v4
         with:
-          path: review/profile
+          ref: docs/profile-architecture
           fetch-depth: 0
-          persist-credentials: false
-      - name: Collect public sources and pinned renderer for offline review
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unpack hash-verified documentation inputs
         shell: bash
-        env:
-          ARCHIFY_UPDATE_CHECK_DISABLED: '1'
         run: |
           set -euo pipefail
-          mkdir -p review/repos
-          git clone --quiet https://github.com/tt-a1i/archify.git review/archify
-          git -C review/archify checkout --quiet d673e8300df60a5c8166abe78787fdc78f6b8000
-          for repo in paulshaclaw paulsha-cortex paulsha-hippo paulsha-conventions testpilot-core serialwrap paulsha-patchmud ask-bridge log-generator new-project-template .github; do
-            git clone --quiet --depth 1 "https://github.com/hamanpaul/${repo}.git" "review/repos/${repo}"
-          done
           python3 - <<'PY'
-          import json, pathlib, subprocess
-          root = pathlib.Path('review')
-          pins = {}
-          for path in [root/'profile', root/'archify', *sorted((root/'repos').iterdir())]:
-              pins[str(path.relative_to(root))] = subprocess.check_output(['git','-C',str(path),'rev-parse','HEAD'], text=True).strip()
-          (root/'pins.json').write_text(json.dumps(pins, indent=2)+'\n')
-          print(json.dumps(pins, indent=2))
+          import base64, hashlib, json, lzma, pathlib
+          root = pathlib.Path('.')
+          encoded = ''.join((root / f'.github/architecture-input-{i}.b64').read_text().strip() for i in range(3))
+          data = base64.b64decode(encoded, validate=True)
+          assert hashlib.sha256(data).hexdigest() == '08ff42f22dd43fd4e0674e34545ddc960a4baca1519b2ef50d1feebc64d095fa', 'input bundle hash mismatch'
+          files = json.loads(lzma.decompress(data))
+          allowed = {'README.md', 'docs/BUILD.md', 'docs/architecture.json', 'docs/build_architecture.py', 'docs/facts.json', 'docs/source-manifest.json', 'docs/test_architecture.py'}
+          assert set(files) == allowed, 'unexpected input path'
+          for path, text in files.items():
+              target = root / path
+              target.parent.mkdir(parents=True, exist_ok=True)
+              target.write_text(text, encoding='utf-8')
           PY
-          tar -czf architecture-review-toolchain.tar.gz review
+      - name: Pin public source excerpts before deriving architecture
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 docs/build_architecture.py snapshot --sources-root "$RUNNER_TEMP/profile-sources"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/evidence docs/source-manifest.json
+          git commit -m 'docs: pin public source excerpts for profile architecture'
+          python3 docs/build_architecture.py pin --revision "$(git rev-parse HEAD)"
+          python3 docs/build_architecture.py provenance --sources-root "$RUNNER_TEMP/profile-sources"
+      - name: Native renderer, source contract and negative controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init -q "$RUNNER_TEMP/profile-archify"
+          git -C "$RUNNER_TEMP/profile-archify" fetch --quiet --depth=1 https://github.com/tt-a1i/archify.git d673e8300df60a5c8166abe78787fdc78f6b8000
+          git -C "$RUNNER_TEMP/profile-archify" checkout --quiet FETCH_HEAD
+          ENGINE="$RUNNER_TEMP/profile-archify/archify"
+          python3 docs/build_architecture.py verify
+          python3 -m unittest discover -s docs -p test_architecture.py -v 2>&1 | tee architecture-tests.txt
+          python3 docs/build_architecture.py render --archify-root "$ENGINE" | tee architecture-render.json
+          python3 docs/build_architecture.py check-html --archify-root "$ENGINE" > architecture-rerender.json
+      - name: Real file navigation and four-viewport browser evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          export ARCHIFY_CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          node "$RUNNER_TEMP/profile-archify/archify/bin/archify.mjs" visual-check docs/index.html --json | tee architecture-browser.json
+      - name: Commit only reviewed documentation and remove transport inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/docs/profile-architecture
+          git add README.md docs/BUILD.md docs/facts.json docs/architecture.json docs/index.html docs/build_architecture.py docs/test_architecture.py
+          git rm .github/architecture-input-0.b64 .github/architecture-input-1.b64 .github/architecture-input-2.b64
+          git commit -m 'docs: publish source-pinned ecosystem diagram and refine profile README'
+          git push origin HEAD:refs/heads/docs/profile-architecture
+          git bundle create profile-review.bundle --all
+          tar --exclude='__pycache__' -czf architecture-delivery.tar.gz README.md docs architecture-tests.txt architecture-render.json architecture-rerender.json architecture-browser.json profile-review.bundle
       - uses: actions/upload-artifact@v4
         with:
-          name: architecture-review-toolchain
-          path: architecture-review-toolchain.tar.gz
-          retention-days: 3
+          name: architecture-delivery
+          path: architecture-delivery.tar.gz
+          retention-days: 7
