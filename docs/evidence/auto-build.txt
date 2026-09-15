@@ -1,0 +1,19 @@
+#### The `auto_build` block (LLM auto-build convention, #30)
+
+`.project-policy.yml` may declare an optional `auto_build:` block carrying a per-project build flow, so an LLM auto-build agent can cold-read "how to build this project"; repos that do not build simply omit the whole block:
+
+```yaml
+auto_build:
+  description: "router firmware image via docker build container"  # str: one-line build target
+  setup:                       # list[str]: environment prep commands
+    - "docker pull registry.example/fw-builder:latest"
+  steps:                       # list[str]: build commands, run in order
+    - "docker run --rm -v $PWD:/src fw-builder make -C /src image"
+  artifacts:                   # list[str]: expected artifact globs
+    - "out/*.img"
+  verify:                      # list[str]: build-success verification commands
+    - "test -s out/firmware.img"
+```
+
+- **R-08 only validates shape**: `auto_build` must be a mapping; `description` a str; `setup` / `steps` / `artifacts` / `verify` each a list[str]. **Unknown subkeys always pass** (per-project extension needs no engine release); there are no required subkeys, and an explicitly-null subkey is treated as unset.
+- **The engine never executes it**: unlike command-executing config (`cli` / `cli_tree` / `generated_facts`), every command string under `auto_build` is pure data to the policy engine — no rule executes it. The consumer is the LLM agent reading the config; execution and its safety review are that agent's human-in-the-loop responsibility.

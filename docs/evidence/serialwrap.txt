@@ -1,0 +1,19 @@
+`serialwrap` is a broker for sharing one UART between multiple AI agents and
+multiple human consoles. The main runtime is `serialwrapd`; the `serialwrap` CLI
+and the broker-aware minicom wrapper are thin clients. The design keeps the
+target UART byte-clean while preserving single-writer arbitration, transparent
+console views, command result capture, and diagnostics.
+
+### Core Features
+
+- The target UART receives only raw commands or raw keystrokes; no begin/end
+  markers are injected into the target input stream.
+- Multiple minicom consoles can attach to the same COM session and observe the
+  same raw RX stream.
+- Foreground commands are serialized by the arbiter so agent and human writes do
+  not interleave.
+- Command execution supports `line`, `background`, and `interactive` modes.
+- Built-in `session self-test` and `session recover` classify missing devices,
+  TTY rebinding, stale bridges, target unresponsiveness, and login states.
+- Always-on `raw.wal.ndjson` plus `raw.mirror.log` and `log tail-text` provide
+  auditable UART evidence.

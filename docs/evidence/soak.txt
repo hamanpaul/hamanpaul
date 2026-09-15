@@ -1,0 +1,6 @@
+# Serialwrap Reboot Log Test Toolkit
+
+This toolkit runs long reboot-log soak tests through serialwrap, one COM
+selector per controller process. COM0 and COM1 use the same controller flow;
+COM1 becomes the abnormal/fault-injection target only after installing the
+boot-time fault injector.

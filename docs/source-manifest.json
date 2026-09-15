@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "scope": "Public source excerpts only; exact bytes, not generated architecture claims. Repo heads are a source snapshot, not a jointly installed release.",
+  "sources": [
+    {
+      "id": "ask-bridge",
+      "repository": "https://github.com/hamanpaul/ask-bridge",
+      "revision": "f952be93d6312733836457e378be5fc1263e7213",
+      "path": "README.md",
+      "line": 1,
+      "end_line": 3,
+      "snapshot": "docs/evidence/ask-bridge.txt",
+      "sha256": "a30f6b6e24982aa237e4640e5601ad2c960b2b1a1984baac44560f60592191aa"
+    },
+    {
+      "id": "auto-build",
+      "repository": "https://github.com/hamanpaul/paulsha-conventions",
+      "revision": "b281c5da5cda0b7e3c67e148c759d99304893c56",
+      "path": "README.md",
+      "line": 170,
+      "end_line": 188,
+      "snapshot": "docs/evidence/auto-build.txt",
+      "sha256": "adbe4fccc81c03f4c468d3064778da8306ff3a9ed108e835a7127828384a71c6"
+    },
+    {
+      "id": "community",
+      "repository": "https://github.com/hamanpaul/.github",
+      "revision": "069b1fecc90ca43e65af4a749248c934c21bd9e9",
+      "path": "README.md",
+      "line": 1,
+      "end_line": 18,
+      "snapshot": "docs/evidence/community.txt",
+      "sha256": "79d31d82c2c8544c8f10b55bcc87bf3dedfb28395fe81db18393347d3b46cb05"
+    },
+    {
+      "id": "cortex",
+      "repository": "https://github.com/hamanpaul/paulsha-cortex",
+      "revision": "d43e8d80a398122e2881c16c16421c41d8b7731c",
+      "path": "README.md",
+      "line": 1,
+      "end_line": 21,
+      "snapshot": "docs/evidence/cortex.txt",
+      "sha256": "f44ca5b9f6815cb1a3fcc3c53512b0dde7a6afeab0473c9d6182905a6989a8b4"
+    },
+    {
+      "id": "cortex-completion",
+      "repository": "https://github.com/hamanpaul/paulsha-cortex",
+      "revision": "d43e8d80a398122e2881c16c16421c41d8b7731c",
+      "path": "README.md",
+      "line": 422,
+      "end_line": 422,
+      "snapshot": "docs/evidence/cortex-completion.txt",
+      "sha256": "285e5f64f74d436c065148a4f7712fc82c10862fa3ff6b6980d12edc78a5472e"
+    },
+    {
+      "id": "cortex-github",
+      "repository": "https://github.com/hamanpaul/paulsha-cortex",
+      "revision": "d43e8d80a398122e2881c16c16421c41d8b7731c",
+      "path": "paulsha_cortex/coordinator/github_delivery.py",
+      "line": 1095,
+      "end_line": 1137,
+      "snapshot": "docs/evidence/cortex-github.txt",
+      "sha256": "472f0d44dc770ca14b5779570702a7c96059c29980490693610baa2725ff7944"
+    },
+    {
+      "id": "cortex-preflight",
+      "repository": "https://github.com/hamanpaul/paulsha-cortex",
+      "revision": "d43e8d80a398122e2881c16c16421c41d8b7731c",
+      "path": "paulsha_cortex/preflight_ci.py",
+      "line": 71,
+      "end_line": 76,
+      "snapshot": "docs/evidence/cortex-preflight.txt",
+      "sha256": "5e9b40e173abd44c17e55b5785714f05e94c2bfa49b85acd706dbf4bd855ce90"
+    },
+    {
+      "id": "hippo",
+      "repository": "https://github.com/hamanpaul/paulsha-hippo",
+      "revision": "a246070ac334c0e10db895cb12a2eb2e5b8857d4",
+      "path": "README.md",
+      "line": 1,
+      "end_line": 5,
+      "snapshot": "docs/evidence/hippo.txt",
+      "sha256": "6dfeddd6eccccda44177a438a983f8cedf396fec1c03561f3b30210f4563b3e3"
+    },
+    {
+      "id": "hippo-pipeline",
+      "repository": "https://github.com/hamanpaul/paulsha-hippo",
+      "revision": "a246070ac334c0e10db895cb12a2eb2e5b8857d4",
+      "path": "README.md",
+      "line": 37,
+      "end_line": 44,
+      "snapshot": "docs/evidence/hippo-pipeline.txt",
+      "sha256": "696ae4fa5254bf53701189fd3282e0ca19ebb372d3936b473119866c628275af"
+    },
+    {
+      "id": "patchmud",
+      "repository": "https://github.com/hamanpaul/paulsha-patchmud",
+      "revision": "1184c9e33d5511648b9adbab147780cbd3a0322f",
+      "path": "README.md",
+      "line": 1,
+      "end_line": 10,
+      "snapshot": "docs/evidence/patchmud.txt",
+      "sha256": "462626f9c8fd450d7576fcb91e34e798936e286b25439983579e9b0f7d0868c9"
+    },
+    {
+      "id": "patchmud-cli",
+      "repository": "https://github.com/hamanpaul/paulsha-patchmud",
+      "revision": "1184c9e33d5511648b9adbab147780cbd3a0322f",
+      "path": "README.md",
+      "line": 56,
+      "end_line": 56,
+      "snapshot": "docs/evidence/patchmud-cli.txt",
+      "sha256": "963159fc7d9de9ad814690ac4d03140238fa3ae122ce22e9b6e3977a2a5ed05c"
+    },
+    {
+      "id": "policy",
+      "repository": "https://github.com/hamanpaul/paulsha-conventions",
+      "revision": "b281c5da5cda0b7e3c67e148c759d99304893c56",
+      "path": "README.md",
+      "line": 1,
+      "end_line": 1,
+      "snapshot": "docs/evidence/policy.txt",
+      "sha256": "194e6fb17c210d3dd98418302bb3d8abb975b671c33e142f34560cfecdc6ca32"
+    },
+    {
+      "id": "policy-ci",
+      "repository": "https://github.com/hamanpaul/paulshaclaw",
+      "revision": "71feb775322fd41408be601324f3bac9aac33ff9",
+      "path": ".github/workflows/policy-check.yml",
+      "line": 1,
+      "end_line": 14,
+      "snapshot": "docs/evidence/policy-ci.txt",
+      "sha256": "e2e4a242df7132db00594494a8984c75d400a8b7674fa291a9c55ead36ef086d"
+    },
+    {
+      "id": "profile-intent",
+      "repository": "https://github.com/hamanpaul/hamanpaul",
+      "revision": "8404f4ca1622c73f86b5af966c30d1fd44297d61",
+      "path": "README.md",
+      "line": 110,
+      "end_line": 121,
+      "snapshot": "docs/evidence/profile-intent.txt",
+      "sha256": "f6db55af56cdab57e22951aefabc47312526340bb251ee22ea4d2802228c932a"
+    },
+    {
+      "id": "reliability-plugin",
+      "repository": "https://github.com/hamanpaul/serialwrap",
+      "revision": "5d65277c8abdda6793050e191704d0234be03357",
+      "path": "reliability/serialwrap_reliability/plugin.py",
+      "line": 12,
+      "end_line": 23,
+      "snapshot": "docs/evidence/reliability-plugin.txt",
+      "sha256": "cbad34466c0e4d31641c28aa1c39abe5f10bb8556420b3cd856c8296c5427cf9"
+    },
+    {
+      "id": "serialwrap",
+      "repository": "https://github.com/hamanpaul/serialwrap",
+      "revision": "5d65277c8abdda6793050e191704d0234be03357",
+      "path": "README.md",
+      "line": 74,
+      "end_line": 92,
+      "snapshot": "docs/evidence/serialwrap.txt",
+      "sha256": "141c03521865264de125502c7859d9dd52c59bdc78c433e2e3e804939e697d2c"
+    },
+    {
+      "id": "shell",
+      "repository": "https://github.com/hamanpaul/paulshaclaw",
+      "revision": "71feb775322fd41408be601324f3bac9aac33ff9",
+      "path": "README.md",
+      "line": 1,
+      "end_line": 5,
+      "snapshot": "docs/evidence/shell.txt",
+      "sha256": "df4bce16497cb52890d78f566987d0646a2a9fa84427ea32aa29b9365667720c"
+    },
+    {
+      "id": "shell-interfaces",
+      "repository": "https://github.com/hamanpaul/paulshaclaw",
+      "revision": "71feb775322fd41408be601324f3bac9aac33ff9",
+      "path": "README.md",
+      "line": 46,
+      "end_line": 69,
+      "snapshot": "docs/evidence/shell-interfaces.txt",
+      "sha256": "4739d19b6e458e488075bc201c56d024f80a667570d0b3c6d1374e90714a74d1"
+    },
+    {
+      "id": "soak",
+      "repository": "https://github.com/hamanpaul/log-generator",
+      "revision": "4fadda8f6e84600272df97cde38608a8b6530c51",
+      "path": "README.md",
+      "line": 1,
+      "end_line": 6,
+      "snapshot": "docs/evidence/soak.txt",
+      "sha256": "43659fcb3708ef68d1ea58f48c15c18f7911332fe00d6acfef78fb3b1fe94b93"
+    },
+    {
+      "id": "template",
+      "repository": "https://github.com/hamanpaul/new-project-template",
+      "revision": "a80b033a8efcc5bb4787666990e913ebfd0d5bee",
+      "path": "README.md",
+      "line": 1,
+      "end_line": 11,
+      "snapshot": "docs/evidence/template.txt",
+      "sha256": "da488728ca86b528efa11869ae0a0d5aebbbedfccc8a1e9118994e4c20c009ac"
+    },
+    {
+      "id": "testpilot",
+      "repository": "https://github.com/hamanpaul/testpilot-core",
+      "revision": "bf84dc25c94a584904cecd2e26758bdb898572bb",
+      "path": "README.md",
+      "line": 1,
+      "end_line": 1,
+      "snapshot": "docs/evidence/testpilot.txt",
+      "sha256": "94c39ba9d2adb62000ac9ed73b49baa9bbfa8f1d26579b72238df0dc2a43828d"
+    },
+    {
+      "id": "testpilot-scope",
+      "repository": "https://github.com/hamanpaul/testpilot-core",
+      "revision": "bf84dc25c94a584904cecd2e26758bdb898572bb",
+      "path": "README.md",
+      "line": 59,
+      "end_line": 75,
+      "snapshot": "docs/evidence/testpilot-scope.txt",
+      "sha256": "5e17c809e4dc3dac33a96d9dcb11a9fc1bdab9436137eb1a6f8c297ea7357595"
+    },
+    {
+      "id": "testpilot-verdict",
+      "repository": "https://github.com/hamanpaul/testpilot-core",
+      "revision": "bf84dc25c94a584904cecd2e26758bdb898572bb",
+      "path": "README.md",
+      "line": 83,
+      "end_line": 88,
+      "snapshot": "docs/evidence/testpilot-verdict.txt",
+      "sha256": "1c9955c9fdc838534e9a51e1f8a241d6b0559a5447ef2293948fa3a13f27d9fd"
+    }
+  ]
+}

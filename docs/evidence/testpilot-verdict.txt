@@ -1,0 +1,6 @@
+The default core-owned execution path is split into two concerns:
+
+- **Deterministic verdict kernel** — lifecycle execution, evidence collection, retry/timeout handling, canonical trace/result production, and report handoff. The domain-specific pass/fail semantics still come from the plugin's `evaluate()` implementation.
+- **Copilot SDK control plane** — per-case session foundation, lifecycle hooks, advisory planning, tiered environment recovery, and extension surfaces such as custom agents / skills / selective MCP.
+
+Core principle: **agent assistance does not own the final verdict.**

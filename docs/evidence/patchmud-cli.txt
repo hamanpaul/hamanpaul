@@ -1,0 +1,1 @@
+- CLI-based adapter（`claude` / `codex` / `agy`）一律以**純補全模式**執行：工具寫入能力全關、在臨時空目錄執行，執行 candidate code 的唯一 seam 仍是 `IsolationRunner`；`codex` / `agy` 的 reasoning effort 固定 `high`，不隨使用者的 CLI 設定漂移。代價是 CLI 自帶的 system prompt 與 skill 目錄會產生每回合固定的 input token overhead（實測 codex ≈17k、agy ≈18k），跨家比較 economy 維度時需知悉。

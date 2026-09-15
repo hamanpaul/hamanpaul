@@ -1,0 +1,12 @@
+## 受治理的自動化維護閉環 (Governed Closed-Loop Maintenance Flow)
+
+```mermaid
+flowchart LR
+    A["Log / Session Event<br/>(serialwrap / log-generator)"] --> B["Diagnosis Artifact<br/>& Evidence"]
+    B --> C["PaulSha Engine<br/>(Cortex Persona + Hippo Context)"]
+    C --> D["Governed Spec<br/>+ TDD Implementation"]
+    D --> E["Reproducible Build<br/>& TestPilot Verification"]
+    E --> G{"Policy Gate<br/>(paulsha-conventions)"}
+    G -->|Pass| P["Promote & Sync<br/>固化經驗至 Hippo 記憶"]
+    G -->|Fail| R["Retry / Rollback<br/>/ Escalate"]
+    R --> D

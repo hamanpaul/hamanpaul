@@ -1,0 +1,6 @@
+#: backend：治理引擎自己的 CI-parity preflight 進入點。**本模組不 import 它**——
+#: 只以 typed argv spawn，沒安裝時由 python 自己回非零並印出可操作訊息。
+BACKEND_MODULE = "policy_check.preflight"
+
+#: 讀 PR metadata 用的外部程式（登記表 `SYSTEM_PROGRAMS` 有登記；只讀資料，不取程式碼）。
+GH_EXECUTABLE = "gh"

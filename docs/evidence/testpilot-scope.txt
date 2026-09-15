@@ -1,0 +1,17 @@
+**TestPilot Core is a plugin-based test automation and verification framework.**
+
+It provides a versioned plugin SDK (`testpilot.api`), CLI host, lifecycle orchestration, evidence/trace capture, reporting contracts, transport/run-backend abstractions, and an optional agent-assisted control plane. Project-specific test logic belongs in independently developed plugins.
+
+### Scope and current fit
+
+The core extension model is not tied to a single product domain, but the project has an embedded and real-hardware testing heritage. Current field usage, bundled transport support, managed-install assumptions, and most non-trivial examples are still concentrated around device verification.
+
+That means two things at the same time:
+
+- TestPilot Core should not be described as an embedded-only framework; a project can provide its own plugin, cases, environment logic, runner, reporter, and integrations through the public SDK.
+- TestPilot Core also does **not** claim ready-made support for arbitrary domains. Outside the currently exercised device/real-hardware workflows, adopters are expected to supply and validate their own plugin integration.
+
+The core wheel does not ship a domain test suite. Public references currently include:
+
+- `examples/sample_echo/` — a zero-hardware, runnable SDK example that demonstrates packaging, discovery, execution, verdict production, and a plugin-owned CLI.
+- [`serialwrap_reliability`](https://github.com/hamanpaul/serialwrap/tree/main/reliability) — a hardware-backed TestPilot integration used to exercise serialwrap reliability workflows. It lives in the public `serialwrap` repository and is maintained separately from the core.
