@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "archify_repository": "tt-a1i/archify",
+  "archify_revision": "a07fa1d5b2a10cbea110c5a2be2817397a301cdc",
+  "archify_cli_sha256": "980c2ab183875240e654ffe70433179aa21267ff6000962487c56c2c2509402b",
+  "fact_layer_revision": "c9510a2299b44a9fc6b6c75186ef2aa533abb6ef",
+  "source_revision": "ec017919d4fa5770bca8e859e369518c71f4eb1c",
+  "specification_sha256": "be30939e36adc2df2fc7b1dc8eeaa41ecaaa45629faaf14481c03e94f5159ec5",
+  "artifact_sha256": "5b1341367c9c5bcdf1ee62ec310cad65598bb35fc4f2ee8a0902904ef4c3d657",
+  "facts_sha256": "c483ad3a58345e108ee1336b6d894116ef061eb50951aee29b2cf254109354f6",
+  "authored_language": "zh-TW",
+  "fixed_viewer_ui": "en",
+  "claim_level": "source-pinned public declarations; no runtime E2E claim",
+  "archify_tree_sha256": "39db8487d356f0235662fb62f145ddac22e6b1a25a25a476605a7109402e0a39"
+}
