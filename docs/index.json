@@ -1,0 +1,444 @@
+{
+  "meta": {
+    "title": "Paul Haman｜受治理的工程生態",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/hamanpaul/hamanpaul",
+      "revision": "ec017919d4fa5770bca8e859e369518c71f4eb1c",
+      "provider": "github"
+    },
+    "viewBox": [
+      1050,
+      608
+    ]
+  },
+  "components": [
+    {
+      "id": "claw",
+      "label": "paulshaclaw",
+      "type": "frontend",
+      "sublabel": "操作入口／Shell",
+      "tag": "入口",
+      "pos": [
+        300.0,
+        60.0
+      ],
+      "size": [
+        180.0,
+        72.0
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/paulshaclaw/README.md",
+          "line": 1,
+          "end_line": 1
+        }
+      ]
+    },
+    {
+      "id": "cortex",
+      "label": "paulsha-cortex",
+      "type": "backend",
+      "sublabel": "工作生命週期／派工",
+      "tag": "生命週期",
+      "pos": [
+        562.5,
+        60.0
+      ],
+      "size": [
+        180.0,
+        72.0
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/paulsha-cortex/README.md",
+          "line": 1,
+          "end_line": 1
+        },
+        {
+          "path": "docs/evidence/paulsha-cortex/README.md",
+          "line": 21,
+          "end_line": 21
+        }
+      ]
+    },
+    {
+      "id": "executor",
+      "label": "外部 Agent／CLI",
+      "type": "external",
+      "sublabel": "受約束的執行與補全",
+      "tag": "執行者",
+      "pos": [
+        562.5,
+        262.5
+      ],
+      "size": [
+        180.0,
+        72.0
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/paulsha-cortex/README.md",
+          "line": 21,
+          "end_line": 21
+        },
+        {
+          "path": "docs/evidence/paulsha-patchmud/README.md",
+          "line": 56,
+          "end_line": 56
+        },
+        {
+          "path": "docs/evidence/testpilot-core/README.md",
+          "line": 97,
+          "end_line": 97
+        }
+      ]
+    },
+    {
+      "id": "hardware",
+      "label": "DUT／真實硬體",
+      "type": "external",
+      "sublabel": "UART 裝置",
+      "tag": "現場",
+      "pos": [
+        37.5,
+        465.0
+      ],
+      "size": [
+        180.0,
+        72.0
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/serialwrap/README.md",
+          "line": 51,
+          "end_line": 53
+        },
+        {
+          "path": "docs/evidence/testpilot-core/README.md",
+          "line": 113,
+          "end_line": 113
+        }
+      ]
+    },
+    {
+      "id": "hippo",
+      "label": "paulsha-hippo",
+      "type": "database",
+      "sublabel": "經驗記憶／來源與歸因",
+      "tag": "經驗",
+      "pos": [
+        37.5,
+        60.0
+      ],
+      "size": [
+        180.0,
+        72.0
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/paulsha-hippo/README.md",
+          "line": 1,
+          "end_line": 1
+        },
+        {
+          "path": "docs/evidence/paulsha-hippo/README.md",
+          "line": 43,
+          "end_line": 43
+        }
+      ]
+    },
+    {
+      "id": "log-generator",
+      "label": "log-generator",
+      "type": "backend",
+      "sublabel": "重啟耐久／故障注入",
+      "tag": "測試工具",
+      "pos": [
+        562.5,
+        465.0
+      ],
+      "size": [
+        180.0,
+        72.0
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/log-generator/README.md",
+          "line": 3,
+          "end_line": 6
+        }
+      ]
+    },
+    {
+      "id": "patchmud",
+      "label": "paulsha-patchmud",
+      "type": "backend",
+      "sublabel": "凍結關卡／確定性評分",
+      "tag": "實驗室",
+      "pos": [
+        37.5,
+        262.5
+      ],
+      "size": [
+        180.0,
+        72.0
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/paulsha-patchmud/README.md",
+          "line": 7,
+          "end_line": 9
+        },
+        {
+          "path": "docs/evidence/paulsha-patchmud/README.md",
+          "line": 56,
+          "end_line": 56
+        }
+      ]
+    },
+    {
+      "id": "plugin",
+      "label": "領域 Plugin",
+      "type": "backend",
+      "sublabel": "案例／環境／evaluate",
+      "tag": "領域語意",
+      "pos": [
+        825.0,
+        465.0
+      ],
+      "size": [
+        180.0,
+        72.0
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/testpilot-core/README.md",
+          "line": 1,
+          "end_line": 1
+        },
+        {
+          "path": "docs/evidence/testpilot-core/README.md",
+          "line": 74,
+          "end_line": 75
+        },
+        {
+          "path": "docs/evidence/testpilot-core/README.md",
+          "line": 113,
+          "end_line": 113
+        }
+      ]
+    },
+    {
+      "id": "policy",
+      "label": "paulsha-conventions",
+      "type": "security",
+      "sublabel": "Repo policy／變更完整性",
+      "tag": "規範",
+      "pos": [
+        825.0,
+        60.0
+      ],
+      "size": [
+        180.0,
+        72.0
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/paulsha-conventions/README.md",
+          "line": 1,
+          "end_line": 1
+        }
+      ]
+    },
+    {
+      "id": "serialwrap",
+      "label": "serialwrap",
+      "type": "messagebus",
+      "sublabel": "UART 仲裁／原始證據",
+      "tag": "實體證據",
+      "pos": [
+        300.0,
+        465.0
+      ],
+      "size": [
+        180.0,
+        72.0
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/serialwrap/README.md",
+          "line": 1,
+          "end_line": 1
+        },
+        {
+          "path": "docs/evidence/serialwrap/README.md",
+          "line": 51,
+          "end_line": 53
+        }
+      ]
+    },
+    {
+      "id": "testpilot",
+      "label": "testpilot-core",
+      "type": "backend",
+      "sublabel": "測試生命週期／證據",
+      "tag": "驗證",
+      "pos": [
+        825.0,
+        262.5
+      ],
+      "size": [
+        180.0,
+        72.0
+      ],
+      "sources": [
+        {
+          "path": "docs/evidence/testpilot-core/README.md",
+          "line": 1,
+          "end_line": 1
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "claw-cortex",
+      "from": "claw",
+      "to": "cortex",
+      "label": "client／CLI",
+      "variant": "emphasis"
+    },
+    {
+      "id": "claw-hippo",
+      "from": "claw",
+      "to": "hippo",
+      "label": "記憶整合",
+      "variant": "default"
+    },
+    {
+      "id": "cortex-executor",
+      "from": "cortex",
+      "to": "executor",
+      "label": "受治理派工",
+      "variant": "emphasis",
+      "labelAt": [
+        652.5,
+        195.0
+      ]
+    },
+    {
+      "id": "executor-hippo",
+      "from": "executor",
+      "to": "hippo",
+      "label": "Session／recall",
+      "variant": "default",
+      "fromSide": "bottom",
+      "toSide": "bottom",
+      "via": [
+        [
+          652.5,
+          382.5
+        ],
+        [
+          510.0,
+          382.5
+        ],
+        [
+          510.0,
+          195.0
+        ],
+        [
+          127.5,
+          195.0
+        ]
+      ]
+    },
+    {
+      "id": "log-generator-serialwrap",
+      "from": "log-generator",
+      "to": "serialwrap",
+      "label": "重啟壓測",
+      "variant": "default"
+    },
+    {
+      "id": "patchmud-executor",
+      "from": "patchmud",
+      "to": "executor",
+      "label": "評測補全",
+      "variant": "dashed"
+    },
+    {
+      "id": "plugin-serialwrap",
+      "from": "plugin",
+      "to": "serialwrap",
+      "label": "限 UART 工作流程",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "bottom",
+      "via": [
+        [
+          915.0,
+          573.75
+        ],
+        [
+          390.0,
+          573.75
+        ]
+      ]
+    },
+    {
+      "id": "policy-executor",
+      "from": "policy",
+      "to": "executor",
+      "label": "提供變更規範",
+      "variant": "security"
+    },
+    {
+      "id": "serialwrap-hardware",
+      "from": "serialwrap",
+      "to": "hardware",
+      "label": "獨占 UART",
+      "variant": "emphasis"
+    },
+    {
+      "id": "testpilot-executor",
+      "from": "testpilot",
+      "to": "executor",
+      "label": "選配恢復建議",
+      "variant": "dashed",
+      "labelDy": 28
+    },
+    {
+      "id": "testpilot-plugin",
+      "from": "testpilot",
+      "to": "plugin",
+      "label": "執行／evaluate",
+      "variant": "emphasis",
+      "labelAt": [
+        915.0,
+        397.5
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "責任分開，證據串接",
+      "items": [
+        "Cortex 管工作；Plugin 定義領域判定",
+        "虛線為選配／特定用途，不是必經鏈"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "契約地圖，不是 E2E 證書",
+      "items": [
+        "來源：固定版本的公開 README",
+        "完整閉環、經驗效益仍需實測"
+      ]
+    }
+  ],
+  "schema_version": 1,
+  "diagram_type": "architecture"
+}
