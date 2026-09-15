@@ -1,91 +1,69 @@
 name: Architecture documentation
 
 on:
-  push:
-    branches: [docs/profile-architecture]
+  pull_request:
     paths:
+      - README.md
+      - docs/**
+      - .github/workflows/architecture.yml
+  push:
+    branches: [main, docs/profile-architecture]
+    paths:
+      - README.md
+      - docs/**
       - .github/workflows/architecture.yml
 
 permissions:
   contents: read
 
+concurrency:
+  group: architecture-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  prepare-reviewed-documentation:
-    if: github.repository == 'hamanpaul/hamanpaul' && github.ref == 'refs/heads/docs/profile-architecture'
+  architecture-gates:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    permissions:
-      contents: write
     env:
       ARCHIFY_UPDATE_CHECK_DISABLED: '1'
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: docs/profile-architecture
           fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Unpack hash-verified documentation inputs
+      - name: Verify public-source provenance and semantic projection
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import base64, hashlib, json, lzma, pathlib
-          root = pathlib.Path('.')
-          encoded = ''.join((root / f'.github/architecture-input-{i}.b64').read_text().strip() for i in range(3))
-          data = base64.b64decode(encoded, validate=True)
-          assert hashlib.sha256(data).hexdigest() == '08ff42f22dd43fd4e0674e34545ddc960a4baca1519b2ef50d1feebc64d095fa', 'input bundle hash mismatch'
-          files = json.loads(lzma.decompress(data))
-          allowed = {'README.md', 'docs/BUILD.md', 'docs/architecture.json', 'docs/build_architecture.py', 'docs/facts.json', 'docs/source-manifest.json', 'docs/test_architecture.py'}
-          assert set(files) == allowed, 'unexpected input path'
-          for path, text in files.items():
-              target = root / path
-              target.parent.mkdir(parents=True, exist_ok=True)
-              target.write_text(text, encoding='utf-8')
-          PY
-      - name: Pin public source excerpts before deriving architecture
-        shell: bash
-        run: |
-          set -euo pipefail
+          mkdir -p architecture-evidence
           python3 docs/build_architecture.py snapshot --sources-root "$RUNNER_TEMP/profile-sources"
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/evidence docs/source-manifest.json
-          git commit -m 'docs: pin public source excerpts for profile architecture'
-          python3 docs/build_architecture.py pin --revision "$(git rev-parse HEAD)"
-          python3 docs/build_architecture.py provenance --sources-root "$RUNNER_TEMP/profile-sources"
-      - name: Native renderer, source contract and negative controls
+          git diff --exit-code -- docs/evidence docs/source-manifest.json
+          python3 docs/build_architecture.py provenance --sources-root "$RUNNER_TEMP/profile-sources" | tee architecture-evidence/provenance.json
+          python3 docs/build_architecture.py verify | tee architecture-evidence/facts.json
+          python3 -m unittest discover -s docs -p test_architecture.py -v 2>&1 | tee architecture-evidence/tests.txt
+      - name: Exact re-render with pinned native Archify engine
         shell: bash
         run: |
           set -euo pipefail
           git init -q "$RUNNER_TEMP/profile-archify"
           git -C "$RUNNER_TEMP/profile-archify" fetch --quiet --depth=1 https://github.com/tt-a1i/archify.git d673e8300df60a5c8166abe78787fdc78f6b8000
           git -C "$RUNNER_TEMP/profile-archify" checkout --quiet FETCH_HEAD
-          ENGINE="$RUNNER_TEMP/profile-archify/archify"
-          python3 docs/build_architecture.py verify
-          python3 -m unittest discover -s docs -p test_architecture.py -v 2>&1 | tee architecture-tests.txt
-          python3 docs/build_architecture.py render --archify-root "$ENGINE" | tee architecture-render.json
-          python3 docs/build_architecture.py check-html --archify-root "$ENGINE" > architecture-rerender.json
-      - name: Real file navigation and four-viewport browser evidence
+          python3 docs/build_architecture.py check-html --archify-root "$RUNNER_TEMP/profile-archify/archify" | tee architecture-evidence/native-delivery.json
+          git diff --exit-code -- README.md docs/facts.json docs/architecture.json docs/index.html
+      - name: Real file navigation and desktop browser evidence
         shell: bash
         run: |
           set -euo pipefail
           export ARCHIFY_CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
-          node "$RUNNER_TEMP/profile-archify/archify/bin/archify.mjs" visual-check docs/index.html --json | tee architecture-browser.json
-      - name: Commit only reviewed documentation and remove transport inputs
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$GITHUB_REF" = refs/heads/docs/profile-architecture
-          git add README.md docs/BUILD.md docs/facts.json docs/architecture.json docs/index.html docs/build_architecture.py docs/test_architecture.py
-          git rm .github/architecture-input-0.b64 .github/architecture-input-1.b64 .github/architecture-input-2.b64
-          git commit -m 'docs: publish source-pinned ecosystem diagram and refine profile README'
-          git push origin HEAD:refs/heads/docs/profile-architecture
-          git bundle create profile-review.bundle --all
-          tar --exclude='__pycache__' -czf architecture-delivery.tar.gz README.md docs architecture-tests.txt architecture-render.json architecture-rerender.json architecture-browser.json profile-review.bundle
+          "$ARCHIFY_CHROME" --version | tee architecture-evidence/browser-version.txt
+          node "$RUNNER_TEMP/profile-archify/archify/bin/archify.mjs" visual-check docs/index.html --json | tee architecture-evidence/browser.json
+          cp docs/index.visual-check* architecture-evidence/
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: architecture-delivery
-          path: architecture-delivery.tar.gz
-          retention-days: 7
+          name: architecture-evidence-${{ github.run_id }}
+          path: architecture-evidence/
+          retention-days: 14
