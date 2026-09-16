@@ -10,7 +10,7 @@
 
 ## 架構入口
 
-** [互動式架構圖：hamanpaul.github.io](https://hamanpaul.github.io/hamanpaul/))** · [架構事實 facts.json](docs/facts.json) · [Archify 投影 architecture.json](docs/architecture.json) · [來源版本與摘錄索引](docs/source-manifest.json)
+** [互動式架構圖：hamanpaul.github.io](https://hamanpaul.github.io/hamanpaul/)** · [架構事實 facts.json](docs/facts.json) · [Archify 投影 architecture.json](docs/architecture.json) · [來源版本與摘錄索引](docs/source-manifest.json)
 
 GitHub 檔案頁不會直接執行 HTML。下載 `docs/index.html` 後以瀏覽器開啟，即可使用縮放、搜尋、聚焦、關係追蹤與來源檢視；不需要啟動 server。檔名也適合日後以 GitHub Pages 從 `main /docs` 發布，但本次文件更新不代表 Pages 已啟用。
 
