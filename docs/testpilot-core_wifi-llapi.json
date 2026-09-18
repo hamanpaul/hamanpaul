@@ -1,0 +1,583 @@
+{
+  "document_type": "integrated-architecture-explainer",
+  "version": 7,
+  "purpose": "Show testpilot-core control/shared runtime plus wifi_llapi Normal Run and Audit/Calibration as separate flows.",
+  "mental_model": [
+    {
+      "name": "Normal Run = 測 DUT",
+      "meaning": "Case YAML 是測試定義；Core 場控，wifi_llapi 執行與判定。"
+    },
+    {
+      "name": "Audit = 測 Case",
+      "meaning": "Workbook + source/live evidence 回頭驗證 Case YAML 寫得對不對。"
+    },
+    {
+      "name": "Audit 與 Normal 完全分流",
+      "meaning": "Audit 不直接混進 prepare→execute→evaluate 主線。"
+    },
+    {
+      "name": "Focused rerun 才借 Core",
+      "meaning": "audit run-queue/runner_facade 需要實機時，才呼叫 Core ExecutionEngine 跑單案。"
+    },
+    {
+      "name": "Transport / RunBackend",
+      "meaning": "兩條 flow 都共用劇場設施：命令通道 + session/capture/log。"
+    },
+    {
+      "name": "Apply 是唯一寫回",
+      "meaning": "verify-edit / evidence / B-A-C-D gates 通過後，才 apply Case YAML，再建 PR。"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "entry",
+      "group": "core-control",
+      "lane": "core",
+      "x": 55,
+      "y": 105,
+      "w": 165,
+      "h": 76,
+      "label": "CLI / Python API",
+      "one": "進入 TestPilot",
+      "detail": "plugin host entry"
+    },
+    {
+      "id": "run-controller",
+      "group": "core-control",
+      "lane": "core",
+      "x": 280,
+      "y": 105,
+      "w": 185,
+      "h": 76,
+      "label": "Run Controller",
+      "one": "整場 run 的場控",
+      "detail": "start / finish / plugin hooks"
+    },
+    {
+      "id": "case-engine",
+      "group": "core-control",
+      "lane": "core",
+      "x": 525,
+      "y": 105,
+      "w": 195,
+      "h": 76,
+      "label": "ExecutionEngine",
+      "one": "觸發 case / attempt / step",
+      "detail": "Core owns execution order"
+    },
+    {
+      "id": "retry",
+      "group": "core-control",
+      "lane": "core",
+      "x": 780,
+      "y": 105,
+      "w": 190,
+      "h": 76,
+      "label": "Retry Coordinator",
+      "one": "Fail 後決定是否重測",
+      "detail": "retry / remediation coordination"
+    },
+    {
+      "id": "result",
+      "group": "core-control",
+      "lane": "core",
+      "x": 1030,
+      "y": 105,
+      "w": 195,
+      "h": 76,
+      "label": "Result Collection",
+      "one": "收攏 case 結果",
+      "detail": "CaseRunRecord → RunResult"
+    },
+    {
+      "id": "transport",
+      "group": "core-infra",
+      "lane": "core",
+      "x": 525,
+      "y": 285,
+      "w": 195,
+      "h": 84,
+      "label": "Transport",
+      "one": "『下一條命令』",
+      "detail": "serialwrap / ssh / adb / network"
+    },
+    {
+      "id": "run-backend",
+      "group": "core-infra",
+      "lane": "core",
+      "x": 780,
+      "y": 285,
+      "w": 195,
+      "h": 84,
+      "label": "RunBackend",
+      "one": "『把整場錄下來』",
+      "detail": "session / capture / seq / log export"
+    },
+    {
+      "id": "agent-assistance",
+      "group": "agent",
+      "lane": "core",
+      "x": 1030,
+      "y": 285,
+      "w": 195,
+      "h": 84,
+      "label": "Agent Assistance",
+      "one": "『Fail 時幫忙分析』",
+      "detail": "optional plan / analysis only"
+    },
+    {
+      "id": "prepare",
+      "group": "wifi-normal",
+      "lane": "normal",
+      "x": 280,
+      "y": 500,
+      "w": 185,
+      "h": 80,
+      "label": "prepare_run()",
+      "one": "準備 WiFi cases",
+      "detail": "selection / preflight / alignment"
+    },
+    {
+      "id": "environment",
+      "group": "wifi-normal",
+      "lane": "normal",
+      "x": 525,
+      "y": 500,
+      "w": 195,
+      "h": 80,
+      "label": "Environment Hooks",
+      "one": "建立 / 驗證 WiFi 環境",
+      "detail": "setup / verify / teardown"
+    },
+    {
+      "id": "steps",
+      "group": "wifi-normal",
+      "lane": "normal",
+      "x": 780,
+      "y": 500,
+      "w": 195,
+      "h": 80,
+      "label": "execute_step()",
+      "one": "執行 WiFi 動作",
+      "detail": "exec / capture / STA verbs"
+    },
+    {
+      "id": "evaluate",
+      "group": "wifi-normal",
+      "lane": "normal",
+      "x": 1030,
+      "y": 500,
+      "w": 195,
+      "h": 80,
+      "label": "evaluate()",
+      "one": "決定 Case Pass / Fail",
+      "detail": "deterministic WiFi criteria"
+    },
+    {
+      "id": "testbed",
+      "group": "wifi-normal",
+      "lane": "normal",
+      "x": 280,
+      "y": 620,
+      "w": 185,
+      "h": 78,
+      "label": "Testbed / Baselines",
+      "one": "描述 bench 條件",
+      "detail": "DUT / STA binding / baseline"
+    },
+    {
+      "id": "station",
+      "group": "wifi-normal",
+      "lane": "normal",
+      "x": 780,
+      "y": 620,
+      "w": 195,
+      "h": 78,
+      "label": "Station Driver",
+      "one": "WiFi 語意 → 平台命令",
+      "detail": "sta-verb → BDK/platform command"
+    },
+    {
+      "id": "reporter",
+      "group": "wifi-normal",
+      "lane": "normal",
+      "x": 1030,
+      "y": 620,
+      "w": 195,
+      "h": 78,
+      "label": "WiFi Reporter",
+      "one": "RunResult → 報表",
+      "detail": "XLSX / MD / JSON / HTML"
+    },
+    {
+      "id": "audit-inputs",
+      "group": "audit",
+      "lane": "audit",
+      "x": 55,
+      "y": 820,
+      "w": 190,
+      "h": 82,
+      "label": "Audit Inputs",
+      "one": "外部 authority / 現況",
+      "detail": "workbook + source/live + case YAML"
+    },
+    {
+      "id": "audit-init",
+      "group": "audit",
+      "lane": "audit",
+      "x": 285,
+      "y": 820,
+      "w": 180,
+      "h": 82,
+      "label": "init / pass12 / status",
+      "one": "先分流、找出要校正的 Case",
+      "detail": "RID / workbook alignment / buckets"
+    },
+    {
+      "id": "audit-author",
+      "group": "audit",
+      "lane": "audit",
+      "x": 505,
+      "y": 820,
+      "w": 190,
+      "h": 82,
+      "label": "Author Candidate",
+      "one": "source survey + proposed.yaml",
+      "detail": "只改 audit whitelist fields"
+    },
+    {
+      "id": "audit-verify",
+      "group": "audit",
+      "lane": "audit",
+      "x": 735,
+      "y": 820,
+      "w": 190,
+      "h": 82,
+      "label": "verify-edit + record",
+      "one": "證明修改有 evidence",
+      "detail": "boundary / citations / provenance"
+    },
+    {
+      "id": "audit-adversarial",
+      "group": "audit",
+      "lane": "audit",
+      "x": 965,
+      "y": 820,
+      "w": 200,
+      "h": 82,
+      "label": "Adversarial Gates",
+      "one": "證明判準不是橡皮圖章",
+      "detail": "negative / dual-anchor / refuters"
+    },
+    {
+      "id": "audit-decide",
+      "group": "audit",
+      "lane": "audit",
+      "x": 1205,
+      "y": 820,
+      "w": 190,
+      "h": 82,
+      "label": "decide",
+      "one": "applied / pending / block",
+      "detail": "Gate B/A/C/D converge"
+    },
+    {
+      "id": "audit-runqueue",
+      "group": "audit-live",
+      "lane": "audit",
+      "x": 735,
+      "y": 955,
+      "w": 190,
+      "h": 82,
+      "label": "run-queue / runner_facade",
+      "one": "需要實機時 focused rerun",
+      "detail": "借 Core ExecutionEngine 跑單案"
+    },
+    {
+      "id": "audit-apply",
+      "group": "audit",
+      "lane": "audit",
+      "x": 1035,
+      "y": 955,
+      "w": 190,
+      "h": 82,
+      "label": "apply / pr",
+      "one": "通過 gate 才寫回 Case YAML",
+      "detail": "apply lint / branch / PR"
+    },
+    {
+      "id": "devices",
+      "group": "external",
+      "lane": "external",
+      "x": 500,
+      "y": 1110,
+      "w": 215,
+      "h": 78,
+      "label": "Physical Bench",
+      "one": "DUT / STA / optional EndpointPC",
+      "detail": "真正被操作的設備"
+    },
+    {
+      "id": "artifacts",
+      "group": "external",
+      "lane": "external",
+      "x": 1030,
+      "y": 1110,
+      "w": 195,
+      "h": 78,
+      "label": "Artifacts",
+      "one": "logs / traces / reports / bundles",
+      "detail": "normal + audit evidence"
+    }
+  ],
+  "edges": [
+    {
+      "a": "entry",
+      "b": "run-controller",
+      "label": "start run",
+      "kind": "control"
+    },
+    {
+      "a": "run-controller",
+      "b": "prepare",
+      "label": "call prepare_run()",
+      "kind": "cross"
+    },
+    {
+      "a": "prepare",
+      "b": "case-engine",
+      "label": "PreparedRun",
+      "kind": "cross"
+    },
+    {
+      "a": "case-engine",
+      "b": "environment",
+      "label": "setup / verify",
+      "kind": "cross"
+    },
+    {
+      "a": "environment",
+      "b": "steps",
+      "label": "ready",
+      "kind": "normal"
+    },
+    {
+      "a": "steps",
+      "b": "evaluate",
+      "label": "step results",
+      "kind": "normal"
+    },
+    {
+      "a": "evaluate",
+      "b": "result",
+      "label": "verdict",
+      "kind": "cross"
+    },
+    {
+      "a": "result",
+      "b": "reporter",
+      "label": "RunResult",
+      "kind": "cross"
+    },
+    {
+      "a": "reporter",
+      "b": "artifacts",
+      "label": "reports",
+      "kind": "support"
+    },
+    {
+      "a": "case-engine",
+      "b": "retry",
+      "label": "case fail",
+      "kind": "retry"
+    },
+    {
+      "a": "retry",
+      "b": "environment",
+      "label": "remediate + verify",
+      "kind": "retry"
+    },
+    {
+      "a": "retry",
+      "b": "agent-assistance",
+      "label": "optional analysis",
+      "kind": "agent"
+    },
+    {
+      "a": "agent-assistance",
+      "b": "retry",
+      "label": "plan only",
+      "kind": "agent"
+    },
+    {
+      "a": "run-controller",
+      "b": "run-backend",
+      "label": "capture lifecycle",
+      "kind": "infra"
+    },
+    {
+      "a": "run-backend",
+      "b": "result",
+      "label": "log / seq evidence",
+      "kind": "infra"
+    },
+    {
+      "a": "environment",
+      "b": "transport",
+      "label": "commands",
+      "kind": "infra"
+    },
+    {
+      "a": "station",
+      "b": "transport",
+      "label": "platform command",
+      "kind": "infra"
+    },
+    {
+      "a": "transport",
+      "b": "devices",
+      "label": "command I/O",
+      "kind": "infra"
+    },
+    {
+      "a": "run-backend",
+      "b": "devices",
+      "label": "session / capture",
+      "kind": "infra"
+    },
+    {
+      "a": "testbed",
+      "b": "environment",
+      "label": "bench config",
+      "kind": "support"
+    },
+    {
+      "a": "testbed",
+      "b": "station",
+      "label": "driver binding",
+      "kind": "support"
+    },
+    {
+      "a": "steps",
+      "b": "station",
+      "label": "STA verbs",
+      "kind": "support"
+    },
+    {
+      "a": "audit-inputs",
+      "b": "audit-init",
+      "label": "workbook-driven audit",
+      "kind": "audit"
+    },
+    {
+      "a": "audit-init",
+      "b": "audit-author",
+      "label": "needs_pass3 / worklist",
+      "kind": "audit"
+    },
+    {
+      "a": "audit-author",
+      "b": "audit-verify",
+      "label": "proposed.yaml",
+      "kind": "audit"
+    },
+    {
+      "a": "audit-verify",
+      "b": "audit-adversarial",
+      "label": "verified evidence",
+      "kind": "audit"
+    },
+    {
+      "a": "audit-adversarial",
+      "b": "audit-decide",
+      "label": "gate state",
+      "kind": "audit"
+    },
+    {
+      "a": "audit-decide",
+      "b": "audit-apply",
+      "label": "applied only",
+      "kind": "audit"
+    },
+    {
+      "a": "audit-verify",
+      "b": "audit-runqueue",
+      "label": "optional live rerun",
+      "kind": "audit-live"
+    },
+    {
+      "a": "audit-runqueue",
+      "b": "case-engine",
+      "label": "run_one_case_for_audit()",
+      "kind": "audit-live"
+    },
+    {
+      "a": "result",
+      "b": "audit-runqueue",
+      "label": "focused RunResult",
+      "kind": "audit-live"
+    },
+    {
+      "a": "audit-runqueue",
+      "b": "audit-adversarial",
+      "label": "canonical bundle / Gate D",
+      "kind": "audit-live"
+    },
+    {
+      "a": "audit-runqueue",
+      "b": "devices",
+      "label": "through Core I/O",
+      "kind": "audit-live"
+    },
+    {
+      "a": "audit-apply",
+      "b": "artifacts",
+      "label": "audit log / PR / bundle",
+      "kind": "support"
+    }
+  ],
+  "flows": {
+    "normal": [
+      "entry",
+      "run-controller",
+      "prepare",
+      "case-engine",
+      "environment",
+      "steps",
+      "evaluate",
+      "result",
+      "reporter",
+      "artifacts"
+    ],
+    "audit": [
+      "audit-inputs",
+      "audit-init",
+      "audit-author",
+      "audit-verify",
+      "audit-adversarial",
+      "audit-decide",
+      "audit-apply",
+      "artifacts"
+    ],
+    "audit_live": [
+      "audit-verify",
+      "audit-runqueue",
+      "case-engine",
+      "result",
+      "audit-runqueue",
+      "audit-adversarial"
+    ]
+  },
+  "sources": {
+    "audit": [
+      "wifi_llapi/docs/audit-guide.md",
+      "wifi_llapi/wifi_llapi/audit/cli.py",
+      "wifi_llapi/wifi_llapi/audit/runner_facade.py",
+      "wifi_llapi/wifi_llapi/plugin.py: register_cli() -> audit_group"
+    ],
+    "normal": [
+      "wifi_llapi/wifi_llapi/plugin.py",
+      "testpilot-core core-owned execution loop"
+    ]
+  }
+}
